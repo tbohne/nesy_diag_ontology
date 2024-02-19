@@ -19,17 +19,19 @@ class ConnectionController:
     Performs queries as well as knowledge graph extensions via HTTP requests.
     """
 
-    def __init__(self, namespace: str, fuseki_url: str = FUSEKI_URL) -> None:
+    def __init__(self, namespace: str, fuseki_url: str = FUSEKI_URL, verbose: bool = True) -> None:
         """
         Initializes the connection controller.
 
         :param namespace: ontology namespace (prefix URI)
         :param fuseki_url: URL of the 'Fuseki' server hosting the knowledge graph
+        :param verbose: whether the connection controller should log its actions
         """
         self.namespace = Namespace(namespace)
         self.fuseki_url = fuseki_url
         self.graph = Graph()
         self.graph.bind("", self.namespace)
+        self.verbose = verbose
 
     def query_knowledge_graph(self, query: str, verbose: bool) -> List[Dict]:
         """
@@ -39,7 +41,7 @@ class ConnectionController:
         :param verbose: if true, queries are logged
         :return: query results (JSON list)
         """
-        if verbose:
+        if verbose and self.verbose:
             print("query knowledge graph..")
             print(query)
         res = requests.post(self.fuseki_url + SPARQL_ENDPOINT, query.encode(),
@@ -54,11 +56,13 @@ class ConnectionController:
 
         :param facts: facts to be entered into the knowledge graph
         """
-        print(colored("\nextending knowledge graph..", "green", "on_grey", ["bold"]))
+        if self.verbose:
+            print(colored("\nextending knowledge graph..", "green", "on_grey", ["bold"]))
         graph = Graph()
         for fact in facts:
             # for very long facts, only print the first segment (e.g. heatmaps)
-            print("fact:", str(fact)[:200] + "..." if len(str(fact)) > 0 else fact)
+            if self.verbose:
+                print("fact:", str(fact)[:200] + "..." if len(str(fact)) > 0 else fact)
             if fact.property_fact:
                 graph.add((self.get_uri(fact.triple[0]), self.get_uri(fact.triple[1]), Literal(fact.triple[2])))
             else:
@@ -75,9 +79,11 @@ class ConnectionController:
 
         :param facts: facts to be removed from the knowledge graph
         """
-        print(colored("\nremoving facts from knowledge graph..", "green", "on_grey", ["bold"]))
+        if self.verbose:
+            print(colored("\nremoving facts from knowledge graph..", "green", "on_grey", ["bold"]))
         for fact in facts:
-            print("fact:", fact)
+            if self.verbose:
+                print("fact:", fact)
             if fact.property_fact:
                 f = (self.get_uri(fact.triple[0]), self.get_uri(fact.triple[1]), Literal(fact.triple[2]))
                 # TODO: check for better ways to handle these special cases
@@ -88,7 +94,8 @@ class ConnectionController:
             else:
                 f = (self.get_uri(fact.triple[0]), self.get_uri(fact.triple[1]), self.get_uri(fact.triple[2]))
                 query = f"DELETE DATA {{ <{f[0]}> <{f[1]}> <{f[2]}> . }}"
-            print("*** DELETION QUERY:", query)
+            if self.verbose:
+                print("*** DELETION QUERY:", query)
             res = requests.post(
                 self.fuseki_url + UPDATE_ENDPOINT,
                 data=query.encode(),

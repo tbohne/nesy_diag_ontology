@@ -21,16 +21,18 @@ class OntologyInstanceGenerator:
     corresponding background knowledge stored in the KG.
     """
 
-    def __init__(self, kg_url: str = FUSEKI_URL) -> None:
+    def __init__(self, kg_url: str = FUSEKI_URL, verbose: bool = True) -> None:
         """
         Initializes the ontology instance generator.
 
         :param kg_url: URL for the knowledge graph server
+        :param verbose: whether the ontology instance generator should log its actions
         """
         # establish connection to Apache Jena Fuseki server
         self.fuseki_connection = ConnectionController(namespace=ONTOLOGY_PREFIX, fuseki_url=kg_url)
         self.knowledge_graph_query_tool = KnowledgeGraphQueryTool(kg_url=kg_url)
         self.onto_namespace = Namespace(ONTOLOGY_PREFIX)
+        self.verbose = verbose
 
     def extend_knowledge_graph_with_diag_subject_data(self, subject_id: str) -> None:
         """
@@ -42,7 +44,8 @@ class OntologyInstanceGenerator:
         fact_list = []
         diag_subject_instance = self.knowledge_graph_query_tool.query_diag_subject_instance_by_id(subject_id)
         if len(diag_subject_instance) > 0:
-            print("Diag. subject (" + subject_id + ") already part of the KG")
+            if self.verbose:
+                print("Diag. subject (" + subject_id + ") already part of the KG")
         else:
             fact_list = [
                 Fact((diag_subject_uuid, RDF.type, self.onto_namespace["DiagSubject"].toPython())),

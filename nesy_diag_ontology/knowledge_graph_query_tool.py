@@ -16,14 +16,16 @@ class KnowledgeGraphQueryTool:
     the knowledge graph hosted on a Fuseki server.
     """
 
-    def __init__(self, kg_url: str = FUSEKI_URL) -> None:
+    def __init__(self, kg_url: str = FUSEKI_URL, verbose: bool = True) -> None:
         """
         Initializes the KG query tool.
 
         :param kg_url: URL for the server hosting the knowledge graph
+        :param verbose: whether the KG query tool should log its actions
         """
         self.ontology_prefix = ONTOLOGY_PREFIX
         self.fuseki_connection = ConnectionController(namespace=ONTOLOGY_PREFIX, fuseki_url=kg_url)
+        self.verbose = verbose
 
     def complete_ontology_entry(self, entry: str) -> str:
         """
@@ -42,7 +44,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: fault condition
         """
-        if verbose:
+        if verbose and self.verbose:
             print("########################################################################")
             print(colored("QUERY: fault condition description for " + error_code, "green", "on_grey", ["bold"]))
             print("########################################################################")
@@ -68,9 +70,10 @@ class KnowledgeGraphQueryTool:
         :param desc: description to query fault condition instance for
         :return: fault condition instance
         """
-        print("########################################################################")
-        print(colored("QUERY: fault condition for " + desc, "green", "on_grey", ["bold"]))
-        print("########################################################################")
+        if self.verbose:
+            print("########################################################################")
+            print(colored("QUERY: fault condition for " + desc, "green", "on_grey", ["bold"]))
+            print("########################################################################")
         fault_condition_entry = self.complete_ontology_entry('FaultCondition')
         condition_desc_entry = self.complete_ontology_entry('condition_desc')
         s = f"""
@@ -90,7 +93,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: suspect components
         """
-        if verbose:
+        if verbose and self.verbose:
             print("########################################################################")
             print(colored("QUERY: suspect components for " + error_code, "green", "on_grey", ["bold"]))
             print("########################################################################")
@@ -121,9 +124,10 @@ class KnowledgeGraphQueryTool:
         :param component_name: name to query suspect component for
         :return: suspect component
         """
-        print("########################################################################")
-        print(colored("QUERY: suspect components by name - " + component_name, "green", "on_grey", ["bold"]))
-        print("########################################################################")
+        if self.verbose:
+            print("########################################################################")
+            print(colored("QUERY: suspect components by name - " + component_name, "green", "on_grey", ["bold"]))
+            print("########################################################################")
         suspect_comp_entry = self.complete_ontology_entry('SuspectComponent')
         component_name_entry = self.complete_ontology_entry('component_name')
         s = f"""
@@ -142,9 +146,10 @@ class KnowledgeGraphQueryTool:
         :param set_name: name to query component set for
         :return: component set
         """
-        print("########################################################################")
-        print(colored("QUERY: component set by name - " + set_name, "green", "on_grey", ["bold"]))
-        print("########################################################################")
+        if self.verbose:
+            print("########################################################################")
+            print(colored("QUERY: component set by name - " + set_name, "green", "on_grey", ["bold"]))
+            print("########################################################################")
         component_set_entry = self.complete_ontology_entry('ComponentSet')
         set_name_entry = self.complete_ontology_entry('component_set_name')
         s = f"""
@@ -163,9 +168,10 @@ class KnowledgeGraphQueryTool:
         :param id: ID to query diagnosis subject instance for
         :return: diag subject instance
         """
-        print("########################################################################")
-        print(colored("QUERY: diag subject instance by ID " + id, "green", "on_grey", ["bold"]))
-        print("########################################################################")
+        if self.verbose:
+            print("########################################################################")
+            print(colored("QUERY: diag subject instance by ID " + id, "green", "on_grey", ["bold"]))
+            print("########################################################################")
         diag_subject_entry = self.complete_ontology_entry('DiagSubject')
         id_entry = self.complete_ontology_entry('subject_id')
         s = f"""
@@ -185,7 +191,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: diag subjects
         """
-        if verbose:
+        if verbose and self.verbose:
             print("########################################################################")
             print(
                 colored("QUERY: diag subjects associated with error code " + error_code, "green", "on_grey", ["bold"]))
@@ -223,7 +229,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: all error codes stored in the knowledge graph
         """
-        if verbose:
+        if verbose and self.verbose:
             print("########################################################################")
             print(colored("QUERY: all error code instances:", "green", "on_grey", ["bold"]))
             print("########################################################################")
@@ -244,7 +250,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: all fault conditions stored in the knowledge graph
         """
-        if verbose:
+        if verbose and self.verbose:
             print("########################################################################")
             print(colored("QUERY: all fault condition instances:", "green", "on_grey", ["bold"]))
             print("########################################################################")
@@ -265,9 +271,10 @@ class KnowledgeGraphQueryTool:
         :param error_code: error code to query fault condition instance for
         :return: fault condition instance
         """
-        print("########################################################################")
-        print(colored("QUERY: fault condition instance by code " + error_code, "green", "on_grey", ["bold"]))
-        print("########################################################################")
+        if self.verbose:
+            print("########################################################################")
+            print(colored("QUERY: fault condition instance by code " + error_code, "green", "on_grey", ["bold"]))
+            print("########################################################################")
         error_code_entry = self.complete_ontology_entry('ErrorCode')
         code_entry = self.complete_ontology_entry('code')
         represents_entry = self.complete_ontology_entry('represents')
@@ -287,9 +294,10 @@ class KnowledgeGraphQueryTool:
         :param code: code to query `ErrorCode` instance for
         :return: error code instance
         """
-        print("########################################################################")
-        print(colored("QUERY: error code instance by code " + code, "green", "on_grey", ["bold"]))
-        print("########################################################################")
+        if self.verbose:
+            print("########################################################################")
+            print(colored("QUERY: error code instance by code " + code, "green", "on_grey", ["bold"]))
+            print("########################################################################")
         error_code_entry = self.complete_ontology_entry('ErrorCode')
         code_entry = self.complete_ontology_entry('code')
         s = f"""
@@ -310,7 +318,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: diagnostic association instance
         """
-        if verbose:
+        if verbose and self.verbose:
             print("########################################################################")
             print(colored("QUERY: diagnostic association by error code + suspect component: " + error_code + ", " +
                           comp, "green", "on_grey", ["bold"]))
@@ -345,7 +353,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: priority ID
         """
-        if verbose:
+        if verbose and self.verbose:
             print("########################################################################")
             print(colored(
                 "QUERY: diagnostic association priority by error code + suspect component: " + error_code + ", " +
@@ -383,7 +391,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: diagnostic association instance
         """
-        if verbose:
+        if verbose and self.verbose:
             print("########################################################################")
             print(colored(
                 "QUERY: diagnostic association instance by error code + suspect component: " + error_code + ", " +
@@ -419,7 +427,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: diagnostic association instance
         """
-        if verbose:
+        if verbose and self.verbose:
             print("########################################################################")
             print(colored("QUERY: generated heatmaps by error code + suspect component: " + error_code + ", " +
                           comp, "green", "on_grey", ["bold"]))
@@ -453,9 +461,10 @@ class KnowledgeGraphQueryTool:
         :param subject_id: subject ID to query error codes for
         :return: error codes
         """
-        print("########################################################################")
-        print(colored("QUERY: error codes by subject ID " + subject_id, "green", "on_grey", ["bold"]))
-        print("########################################################################")
+        if self.verbose:
+            print("########################################################################")
+            print(colored("QUERY: error codes by subject ID " + subject_id, "green", "on_grey", ["bold"]))
+            print("########################################################################")
         error_code_entry = self.complete_ontology_entry('ErrorCode')
         diag_subject_entry = self.complete_ontology_entry('DiagSubject')
         code_entry = self.complete_ontology_entry('code')
@@ -478,7 +487,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: affecting components
         """
-        if verbose:
+        if verbose and self.verbose:
             print("########################################################################")
             print(colored("QUERY: affecting components by component name "
                           + component_name, "green", "on_grey", ["bold"]))
@@ -503,7 +512,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: component set name
         """
-        if verbose:
+        if verbose and self.verbose:
             print("########################################################################")
             print(colored("QUERY: verified component set by component name "
                           + component_name, "green", "on_grey", ["bold"]))
@@ -532,7 +541,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: suspect component names
         """
-        if verbose:
+        if verbose and self.verbose:
             print("########################################################################")
             print(colored("QUERY: verifying components by component set name "
                           + set_name, "green", "on_grey", ["bold"]))
@@ -561,7 +570,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: component names
         """
-        if verbose:
+        if verbose and self.verbose:
             print("########################################################################")
             print(colored("QUERY: components by component set name " + comp_set_name, "green", "on_grey", ["bold"]))
             print("########################################################################")
@@ -588,7 +597,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: all components stored in the knowledge graph
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: all component instances")
             print("####################################")
@@ -609,7 +618,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: all diag subjects stored in the knowledge graph
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: all diag subject instances")
             print("####################################")
@@ -633,7 +642,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: all rec time series stored in the knowledge graph
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: all rec time series instances")
             print("####################################")
@@ -652,7 +661,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: all signal classifications stored in the knowledge graph
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: all signal classification instances")
             print("####################################")
@@ -673,7 +682,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: all signal classifications stored in the knowledge graph
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: signal classification instances for the specified heatmap:", heatmap_id)
             print("####################################")
@@ -700,7 +709,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: all manual inspections stored in the knowledge graph
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: all manual inspection instances")
             print("####################################")
@@ -719,7 +728,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: all diag logs stored in the knowledge graph
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: all diag log instances")
             print("####################################")
@@ -738,7 +747,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: all fault paths stored in the knowledge graph
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: all fault path instances")
             print("####################################")
@@ -759,7 +768,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: model ID for signal classification instance
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: model ID for the specified signal classification:", signal_classification_id)
             print("####################################")
@@ -784,7 +793,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: component name for component instance
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: suspect component name for the specified instance:", component_id)
             print("####################################")
@@ -810,7 +819,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: uncertainty for signal classification instance
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: uncertainty for the specified signal classification:", signal_classification_id)
             print("####################################")
@@ -835,7 +844,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: date for diag log instance
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: date for the specified diag log:", diag_log_id)
             print("####################################")
@@ -860,7 +869,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: fault conditions for fault path instance
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: fault conditions for the specified fault path:", fault_path_id)
             print("####################################")
@@ -885,7 +894,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: error codes for the diag subject instance
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: error codes for the specified diag subject:", diag_subject_id)
             print("####################################")
@@ -918,7 +927,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: error codes for diag log instance
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: error codes for the specified diag log:", diag_log_id)
             print("####################################")
@@ -943,7 +952,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: diag steps for diag log instance
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: diag steps for the specified diag log:", diag_log_id)
             print("####################################")
@@ -968,7 +977,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: fault path for diag log instance
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: fault path for the specified diag log:", diag_log_id)
             print("####################################")
@@ -993,7 +1002,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: fault path description for the specified ID
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: fault path description for the specified ID:", fault_path_id)
             print("####################################")
@@ -1018,7 +1027,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: fault condition description for the specified ID
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: fault condition description for the specified ID:", fault_condition_id)
             print("####################################")
@@ -1043,7 +1052,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: diag subject for diag log instance
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: diag subject for the specified diag log:", diag_log_id)
             print("####################################")
@@ -1068,7 +1077,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: time series for `TimeSeries` instance
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: time series for the specified `TimeSeries`:", ts_id)
             print("####################################")
@@ -1094,7 +1103,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: time series instance
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: time series instance for the specified classification:", signal_classification_id)
             print("####################################")
@@ -1119,7 +1128,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: suspect component
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: suspect component for the specified classification:", classification_id)
             print("####################################")
@@ -1147,7 +1156,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: classification reason
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: classification reason for the specified classification:", signal_classification_id)
             print("####################################")
@@ -1172,7 +1181,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: classification reason
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: classification reason for the specified classification:", signal_classification_id)
             print("####################################")
@@ -1197,7 +1206,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: classification reason
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: classification reason for the specified manual inspection:", manual_inspection_id)
             print("####################################")
@@ -1222,7 +1231,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: classification reason
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: classification reason for the specified manual inspection:", manual_inspection_id)
             print("####################################")
@@ -1247,7 +1256,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: prediction
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: prediction for the specified classification:", classification_id)
             print("####################################")
@@ -1276,7 +1285,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: generated heatmap
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: heatmap instance for the specified classification:", signal_classification_id)
             print("####################################")
@@ -1301,7 +1310,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: heatmap generation method
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: heatmap generation method for the specified heatmap instance:", heatmap_id)
             print("####################################")
@@ -1326,7 +1335,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: heatmap values (string)
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: heatmap values for the specified heatmap instance:", heatmap_id)
             print("####################################")
@@ -1350,7 +1359,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: all heatmaps stored in the knowledge graph
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: all heatmap instances")
             print("####################################")
@@ -1369,7 +1378,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: if true, logging is activated
         :return: all component sets stored in the knowledge graph
         """
-        if verbose:
+        if verbose and self.verbose:
             print("####################################")
             print("QUERY: all component set instances")
             print("####################################")
