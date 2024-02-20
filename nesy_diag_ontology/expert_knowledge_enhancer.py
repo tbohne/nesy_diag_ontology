@@ -28,16 +28,18 @@ class ExpertKnowledgeEnhancer:
     This class deals with semantic fact generation for the diag-subject-agnostic expert knowledge.
     """
 
-    def __init__(self, kg_url: str = FUSEKI_URL) -> None:
+    def __init__(self, kg_url: str = FUSEKI_URL, verbose: bool = True) -> None:
         """
         Initializes the expert knowledge enhancer.
 
         :param kg_url: URL for the knowledge graph server
+        :param verbose: whether the expert knowledge enhancer should log its actions
         """
         # establish connection to 'Apache Jena Fuseki' server
-        self.fuseki_connection = ConnectionController(namespace=ONTOLOGY_PREFIX, fuseki_url=kg_url)
+        self.fuseki_connection = ConnectionController(namespace=ONTOLOGY_PREFIX, fuseki_url=kg_url, verbose=verbose)
         self.onto_namespace = Namespace(ONTOLOGY_PREFIX)
-        self.knowledge_graph_query_tool = KnowledgeGraphQueryTool()
+        self.knowledge_graph_query_tool = KnowledgeGraphQueryTool(verbose=verbose)
+        self.verbose = verbose
 
     def generate_condition_description_fact(self, fc_uuid: str, fault_cond: str, prop: bool) -> Fact:
         """
@@ -212,7 +214,8 @@ class ExpertKnowledgeEnhancer:
         error_code_instance = self.knowledge_graph_query_tool.query_error_code_instance_by_code(
             error_code_knowledge.error_code)
         if len(error_code_instance) > 0:
-            print("Specified error code (" + error_code_knowledge.error_code + ") already present in KG")
+            if self.verbose:
+                print("Specified error code (" + error_code_knowledge.error_code + ") already present in KG")
             error_code_uuid = error_code_instance[0].split("#")[1]
         else:
             fact_list = [
@@ -236,7 +239,8 @@ class ExpertKnowledgeEnhancer:
         # check whether fault condition to be added is already part of the KG
         fault_cond_instance = self.knowledge_graph_query_tool.query_fault_condition_by_description(fault_cond)
         if len(fault_cond_instance) > 0:
-            print("Specified fault condition (" + fault_cond + ") already present in KG, updating description")
+            if self.verbose:
+                print("Specified fault condition (" + fault_cond + ") already present in KG, updating description")
             fault_cond_uuid = fault_cond_instance[0].split("#")[1]
             fact_list.append(Fact(
                 (fault_cond_uuid, self.onto_namespace.condition_desc, fault_cond), property_fact=True)
@@ -302,7 +306,8 @@ class ExpertKnowledgeEnhancer:
             # check whether component to be added is already part of the KG
             comp_instance = self.knowledge_graph_query_tool.query_suspect_component_by_name(comp_name)
             if len(comp_instance) > 0:
-                print("Specified component (" + comp_name + ") already present in KG")
+                if self.verbose:
+                    print("Specified component (" + comp_name + ") already present in KG")
                 comp_uuid = comp_instance[0].split("#")[1]
             else:
                 fact_list.append(Fact((comp_uuid, RDF.type, self.onto_namespace["SuspectComponent"].toPython())))
@@ -326,7 +331,8 @@ class ExpertKnowledgeEnhancer:
         # check whether component set to be added is already part of the KG
         comp_set_instance = self.knowledge_graph_query_tool.query_component_set_by_name(comp_set_name)
         if len(comp_set_instance) > 0:
-            print("Specified component set (" + comp_set_name + ") already present in KG")
+            if self.verbose:
+                print("Specified component set (" + comp_set_name + ") already present in KG")
             comp_set_uuid = comp_set_instance[0].split("#")[1]
         else:
             fact_list = [
