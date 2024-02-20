@@ -24,7 +24,7 @@ class KnowledgeGraphQueryTool:
         :param verbose: whether the KG query tool should log its actions
         """
         self.ontology_prefix = ONTOLOGY_PREFIX
-        self.fuseki_connection = ConnectionController(namespace=ONTOLOGY_PREFIX, fuseki_url=kg_url)
+        self.fuseki_connection = ConnectionController(namespace=ONTOLOGY_PREFIX, fuseki_url=kg_url, verbose=verbose)
         self.verbose = verbose
 
     def complete_ontology_entry(self, entry: str) -> str:

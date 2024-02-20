@@ -29,8 +29,8 @@ class OntologyInstanceGenerator:
         :param verbose: whether the ontology instance generator should log its actions
         """
         # establish connection to Apache Jena Fuseki server
-        self.fuseki_connection = ConnectionController(namespace=ONTOLOGY_PREFIX, fuseki_url=kg_url)
-        self.knowledge_graph_query_tool = KnowledgeGraphQueryTool(kg_url=kg_url)
+        self.fuseki_connection = ConnectionController(namespace=ONTOLOGY_PREFIX, fuseki_url=kg_url, verbose=verbose)
+        self.knowledge_graph_query_tool = KnowledgeGraphQueryTool(kg_url=kg_url, verbose=verbose)
         self.onto_namespace = Namespace(ONTOLOGY_PREFIX)
         self.verbose = verbose
 
