@@ -31,6 +31,16 @@
     
 
 
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#assesses -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#assesses">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Model"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SuspectComponent"/>
+        <rdfs:label xml:lang="en">assesses</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.semanticweb.org/nesy_diag_ontology#checks -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#checks">
@@ -45,7 +55,7 @@
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#classifies">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SignalClassification"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#TimeSeries"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SensorSignal"/>
         <rdfs:label xml:lang="en">classifies</rdfs:label>
     </owl:ObjectProperty>
     
@@ -55,7 +65,7 @@
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#createdFor">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#DiagLog"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#DiagSubject"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#DiagEntity"/>
         <rdfs:label xml:lang="en">createdFor</rdfs:label>
     </owl:ObjectProperty>
     
@@ -71,6 +81,16 @@
     
 
 
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#elementOf -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#elementOf">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SubComponent"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SuspectComponent"/>
+        <rdfs:label xml:lang="en">elementOf</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.semanticweb.org/nesy_diag_ontology#entails -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#entails">
@@ -81,12 +101,52 @@
     
 
 
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#expects -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#expects">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#InputChannelRequirement"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Channel"/>
+        <rdfs:label xml:lang="en">expects</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.semanticweb.org/nesy_diag_ontology#hasAssociation -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#hasAssociation">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#ErrorCode"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#DiagnosticAssociation"/>
         <rdfs:label xml:lang="en">hasAssociation</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#hasCOI -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#hasCOI">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SuspectComponent"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Channel"/>
+        <rdfs:label xml:lang="en">hasCOI</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#hasChannel -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#hasChannel">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SuspectComponent"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Channel"/>
+        <rdfs:label xml:lang="en">hasChannel</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#hasRequirement -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#hasRequirement">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Model"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#InputChannelRequirement"/>
+        <rdfs:label xml:lang="en">hasRequirement</rdfs:label>
     </owl:ObjectProperty>
     
 
@@ -107,6 +167,46 @@
         <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#DiagnosticAssociation"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Classification"/>
         <rdfs:label xml:lang="en">ledTo</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#manifestedBy -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#manifestedBy">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#FaultCondition"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Symptom"/>
+        <rdfs:label xml:lang="en">manifestedBy</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#overlays -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#overlays">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Heatmap"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SensorSignal"/>
+        <rdfs:label xml:lang="en">overlays</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#partOf -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#partOf">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SensorSignal"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#ParallelRecSignalSet"/>
+        <rdfs:label xml:lang="en">partOf</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#performs -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#performs">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Model"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SignalClassification"/>
+        <rdfs:label xml:lang="en">performs</rdfs:label>
     </owl:ObjectProperty>
     
 
@@ -137,6 +237,16 @@
         <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Classification"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Classification"/>
         <rdfs:label xml:lang="en">reasonFor</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#records -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#records">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SensorSignal"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Channel"/>
+        <rdfs:label xml:lang="en">records</rdfs:label>
     </owl:ObjectProperty>
     
 
@@ -192,6 +302,36 @@
     
 
 
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#architecture -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#architecture">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Model"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label xml:lang="en">architecture</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#channel_idx -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#channel_idx">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#InputChannelRequirement"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+        <rdfs:label xml:lang="en">channel_idx</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#channel_name -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#channel_name">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Channel"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label xml:lang="en">channel_name</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.semanticweb.org/nesy_diag_ontology#code -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#code">
@@ -242,6 +382,26 @@
     
 
 
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#entity_id -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#entity_id">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#DiagEntity"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label xml:lang="en">subject_id</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#exp_normalization_method -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#exp_normalization_method">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Model"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label xml:lang="en">exp_normalization_method</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.semanticweb.org/nesy_diag_ontology#fault_path_desc -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#fault_path_desc">
@@ -272,12 +432,42 @@
     
 
 
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#input_shape -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#input_shape">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Model"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label xml:lang="en">input_length</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#measuring_instruction -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#measuring_instruction">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Model"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label xml:lang="en">measuring_instruction</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.semanticweb.org/nesy_diag_ontology#model_id -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#model_id">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SignalClassification"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Model"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rdfs:label xml:lang="en">model_id</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#original_resolution -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#original_resolution">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SensorSignal"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label xml:lang="en">original_timespan</rdfs:label>
     </owl:DatatypeProperty>
     
 
@@ -302,22 +492,22 @@
     
 
 
-    <!-- http://www.semanticweb.org/nesy_diag_ontology#subject_id -->
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#signal -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#subject_id">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#DiagSubject"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#signal">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SensorSignal"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:label xml:lang="en">subject_id</rdfs:label>
+        <rdfs:label xml:lang="en">time_series</rdfs:label>
     </owl:DatatypeProperty>
     
 
 
-    <!-- http://www.semanticweb.org/nesy_diag_ontology#time_series -->
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#symptom_desc -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#time_series">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#TimeSeries"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#symptom_desc">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Symptom"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:label xml:lang="en">time_series</rdfs:label>
+        <rdfs:label xml:lang="en">symptom_desc</rdfs:label>
     </owl:DatatypeProperty>
     
 
@@ -332,6 +522,16 @@
     
 
 
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#use_sensor -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nesy_diag_ontology#use_sensor">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SuspectComponent"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+        <rdfs:label xml:lang="en">use_sensor</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
@@ -340,6 +540,21 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#Channel -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nesy_diag_ontology#Channel">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#channel_name"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:label xml:lang="en">Channel</rdfs:label>
+    </owl:Class>
     
 
 
@@ -373,6 +588,21 @@
     
 
 
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#DiagEntity -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nesy_diag_ontology#DiagEntity">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#entity_id"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:label xml:lang="en">DiagSubject</rdfs:label>
+    </owl:Class>
+    
+
+
     <!-- http://www.semanticweb.org/nesy_diag_ontology#DiagLog -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/nesy_diag_ontology#DiagLog">
@@ -384,21 +614,6 @@
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:label xml:lang="en">DiagLog</rdfs:label>
-    </owl:Class>
-    
-
-
-    <!-- http://www.semanticweb.org/nesy_diag_ontology#DiagSubject -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/nesy_diag_ontology#DiagSubject">
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#subject_id"/>
-                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
-                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:label xml:lang="en">DiagSubject</rdfs:label>
     </owl:Class>
     
 
@@ -485,11 +700,99 @@
     
 
 
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#InputChannelRequirement -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nesy_diag_ontology#InputChannelRequirement">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#channel_idx"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:label xml:lang="en">InputChannelRequirement</rdfs:label>
+    </owl:Class>
+    
+
+
     <!-- http://www.semanticweb.org/nesy_diag_ontology#ManualInspection -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/nesy_diag_ontology#ManualInspection">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Classification"/>
         <rdfs:label xml:lang="en">ManualInspection</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#Model -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nesy_diag_ontology#Model">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#architecture"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#exp_normalization_method"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#input_shape"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#measuring_instruction"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#model_id"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:label xml:lang="en">Model</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#ParallelRecSignalSet -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nesy_diag_ontology#ParallelRecSignalSet">
+        <rdfs:label xml:lang="en">ParallelRecSignalSet</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#SensorSignal -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nesy_diag_ontology#SensorSignal">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#original_resolution"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#signal"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:label xml:lang="en">TimeSeries</rdfs:label>
     </owl:Class>
     
 
@@ -500,19 +803,21 @@
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#Classification"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#model_id"/>
-                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
-                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#uncertainty"/>
                 <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
                 <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:label xml:lang="en">SignalClassification</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#SubComponent -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nesy_diag_ontology#SubComponent">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#SuspectComponent"/>
+        <rdfs:label xml:lang="en">SubComponent</rdfs:label>
     </owl:Class>
     
 
@@ -527,22 +832,29 @@
                 <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#use_sensor"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
         <rdfs:label xml:lang="en">SuspectComponent</rdfs:label>
     </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/nesy_diag_ontology#TimeSeries -->
+    <!-- http://www.semanticweb.org/nesy_diag_ontology#Symptom -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/nesy_diag_ontology#TimeSeries">
+    <owl:Class rdf:about="http://www.semanticweb.org/nesy_diag_ontology#Symptom">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#time_series"/>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/nesy_diag_ontology#symptom_desc"/>
                 <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
                 <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
             </owl:Restriction>
         </rdfs:subClassOf>
-        <rdfs:label xml:lang="en">TimeSeries</rdfs:label>
+        <rdfs:label xml:lang="en">Symptom</rdfs:label>
     </owl:Class>
 </rdf:RDF>
 
