@@ -5,7 +5,7 @@
 
 > Ontology for capturing knowledge about neuro-symbolic diagnostics. The objective is to build up a knowledge graph based on this ontology by populating it with large amounts of instance data (cf. `knowledge_base/live_kg_backups/`) as well as functionalities for knowledge acquisition, enhancement and retrieval. This neuro-symbolic diagnosis ontology generalizes the [OBD ontology](https://github.com/tbohne/obd_ontology).
 
-![](img/raw_nesy_diag_ontology_owl.svg)
+![](img/nesy_diag_ontology_v1.svg)
 
 ## Three Levels of Abstraction
 
