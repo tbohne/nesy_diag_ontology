@@ -3,8 +3,7 @@
 # @author Tim Bohne
 
 import uuid
-from typing import List
-from typing import Tuple
+from typing import List, Tuple
 
 from rdflib import Namespace, RDF
 
@@ -19,20 +18,20 @@ from nesy_diag_ontology.knowledge_graph_query_tool import KnowledgeGraphQueryToo
 
 class ExpertKnowledgeEnhancer:
     """
-    Extends the knowledge graph hosted by the Fuseki server with diag-subject-agnostic expert knowledge.
+    Extends the knowledge graph hosted by the 'Fuseki' server with diag-entity-agnostic expert knowledge.
 
     The acquisition of expert knowledge is accomplished via a web interface (collaborative knowledge acquisition
     component) through which the knowledge is entered, stored in the Resource Description Framework (RDF) format,
-    and hosted on an Apache Jena Fuseki server.
+    and hosted on an 'Apache Jena Fuseki' server.
 
-    This class deals with semantic fact generation for the diag-subject-agnostic expert knowledge.
+    This class deals with semantic fact generation for the diag-entity-agnostic expert knowledge.
     """
 
     def __init__(self, kg_url: str = FUSEKI_URL, verbose: bool = True) -> None:
         """
         Initializes the expert knowledge enhancer.
 
-        :param kg_url: URL for the knowledge graph server
+        :param kg_url: URL of the knowledge graph server
         :param verbose: whether the expert knowledge enhancer should log its actions
         """
         # establish connection to 'Apache Jena Fuseki' server
@@ -63,23 +62,23 @@ class ExpertKnowledgeEnhancer:
         """
         return Fact((heatmap_uuid, self.onto_namespace.generated_heatmap, heatmap), property_fact=prop)
 
-    def generate_time_series_fact(self, ts_uuid: str, time_series: str, prop: bool) -> Fact:
+    def generate_signal_fact(self, signal_uuid: str, signal: str, prop: bool) -> Fact:
         """
-        Generates a `time_series` fact (RDF) based on the provided properties.
+        Generates a `signal` fact (RDF) based on the provided properties.
 
-        :param ts_uuid: UUID of the `TimeSeries` to generate fact for
-        :param time_series: time series string
+        :param signal_uuid: UUID of the `SensorSignal` to generate fact for
+        :param signal: sensor signal string
         :param prop: determines whether it's a property fact
         :return: generated fact
         """
-        return Fact((ts_uuid, self.onto_namespace.time_series, time_series), property_fact=prop)
+        return Fact((signal_uuid, self.onto_namespace.signal, signal), property_fact=prop)
 
     def generate_heatmap_generation_method_fact(self, heatmap_uuid: str, gen_method: str, prop: bool) -> Fact:
         """
         Generates a `generation_method` fact (RDF) based on the provided properties.
 
         :param heatmap_uuid: UUID of the heatmap to generate fact for
-        :param gen_method: heatmap generation method (e.g. tf-keras-gradcam)
+        :param gen_method: heatmap generation method (e.g., tf-keras-gradcam)
         :param prop: determines whether it's a property fact
         :return: generated fact
         """
@@ -133,16 +132,16 @@ class ExpertKnowledgeEnhancer:
             property_fact=prop
         )
 
-    def generate_time_series_fact(self, ts_uuid: str, prop: bool) -> Fact:
+    def generate_sensor_signal_fact(self, signal_uuid: str, prop: bool) -> Fact:
         """
-        Generates a `TimeSeries` fact (RDF) based on the provided properties.
+        Generates a `SensorSignal` fact (RDF) based on the provided properties.
 
-        :param ts_uuid: UUID of the time series to generate fact for
+        :param signal_uuid: UUID of the sensor signal to generate fact for
         :param prop: determines whether it's a property fact
         :return: generated fact
         """
         return Fact(
-            (ts_uuid, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", self.onto_namespace.TimeSeries),
+            (signal_uuid, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", self.onto_namespace.SensorSignal),
             property_fact=prop
         )
 
@@ -157,16 +156,16 @@ class ExpertKnowledgeEnhancer:
         """
         return Fact((classification_uuid, self.onto_namespace.produces, heatmap_uuid), property_fact=prop)
 
-    def generate_classifies_fact(self, signal_classification_id: str, ts_id: str, prop: bool) -> Fact:
+    def generate_classifies_fact(self, signal_classification_id: str, signal_id: str, prop: bool) -> Fact:
         """
         Generates a `classifies` fact (RDF) based on the provided properties.
 
         :param signal_classification_id: UUID of the signal classification to generate fact for
-        :param ts_id: UUID of the time series to generate fact for
+        :param signal_id: UUID of the sensor signal to generate fact for
         :param prop: determines whether it's a property fact
         :return: generated fact
         """
-        return Fact((signal_classification_id, self.onto_namespace.classifies, ts_id), property_fact=prop)
+        return Fact((signal_classification_id, self.onto_namespace.classifies, signal_id), property_fact=prop)
 
     def generate_includes_fact(self, component_set_uuid: str, comp_uuid: str, prop: bool) -> Fact:
         """
@@ -212,7 +211,8 @@ class ExpertKnowledgeEnhancer:
         fact_list = []
         # check whether error code to be added is already part of the KG
         error_code_instance = self.knowledge_graph_query_tool.query_error_code_instance_by_code(
-            error_code_knowledge.error_code)
+            error_code_knowledge.error_code
+        )
         if len(error_code_instance) > 0:
             if self.verbose:
                 print("Specified error code (" + error_code_knowledge.error_code + ") already present in KG")
@@ -224,8 +224,9 @@ class ExpertKnowledgeEnhancer:
             ]
         return error_code_uuid, fact_list
 
-    def generate_fault_cond_facts(self, error_code_uuid: str, error_code_knowledge: ErrorCodeKnowledge) -> Tuple[
-        str, List[Fact]]:
+    def generate_fault_cond_facts(
+            self, error_code_uuid: str, error_code_knowledge: ErrorCodeKnowledge
+    ) -> Tuple[str, List[Fact]]:
         """
         Generates the `FaultCondition`-related facts to be entered into the knowledge graph.
 
@@ -242,8 +243,8 @@ class ExpertKnowledgeEnhancer:
             if self.verbose:
                 print("Specified fault condition (" + fault_cond + ") already present in KG, updating description")
             fault_cond_uuid = fault_cond_instance[0].split("#")[1]
-            fact_list.append(Fact(
-                (fault_cond_uuid, self.onto_namespace.condition_desc, fault_cond), property_fact=True)
+            fact_list.append(
+                Fact((fault_cond_uuid, self.onto_namespace.condition_desc, fault_cond), property_fact=True)
             )
         else:
             fact_list = [
@@ -253,8 +254,9 @@ class ExpertKnowledgeEnhancer:
             ]
         return fault_cond_uuid, fact_list
 
-    def generate_facts_to_connect_components_and_error_code(self, error_code_uuid: str,
-                                                            error_code_knowledge: ErrorCodeKnowledge) -> List[Fact]:
+    def generate_facts_to_connect_components_and_error_code(
+            self, error_code_uuid: str, error_code_knowledge: ErrorCodeKnowledge
+    ) -> List[Fact]:
         """
         Generates the facts that connect the present error code with associated suspect components, i.e., generating
         the diagnostic associations.
@@ -276,8 +278,10 @@ class ExpertKnowledgeEnhancer:
                 error_code_knowledge.error_code, comp
             )
             if len(diag_association) > 0:
-                print("Diagnostic association between", error_code_knowledge.error_code, "and", comp,
-                      "already defined in KG")
+                print(
+                    "Diagnostic association between", error_code_knowledge.error_code,
+                    "and", comp, "already defined in KG"
+                )
             else:
                 # TODO: shouldn't the diagnostic association be deletable, too?
                 # creating diagnostic association between `ErrorCode` and `SuspectComponent`
@@ -337,7 +341,7 @@ class ExpertKnowledgeEnhancer:
         else:
             fact_list = [
                 Fact((comp_set_uuid, RDF.type, self.onto_namespace["ComponentSet"].toPython())),
-                Fact((comp_set_uuid, self.onto_namespace.component_set_name, comp_set_name), property_fact=True)
+                Fact((comp_set_uuid, self.onto_namespace.set_name, comp_set_name), property_fact=True)
             ]
         for containing_comp in comp_set_knowledge.includes:
             # relate knowledge to already existing facts
@@ -366,13 +370,15 @@ class ExpertKnowledgeEnhancer:
         """
         error_code_uuid, error_code_facts = self.generate_error_code_facts(error_code_knowledge)
         fault_cond_uuid, fault_cond_facts = self.generate_fault_cond_facts(error_code_uuid, error_code_knowledge)
-        diag_association_facts = self.generate_facts_to_connect_components_and_error_code(error_code_uuid,
-                                                                                          error_code_knowledge)
+        diag_association_facts = self.generate_facts_to_connect_components_and_error_code(
+            error_code_uuid, error_code_knowledge
+        )
         fact_list = error_code_facts + fault_cond_facts + diag_association_facts
         return fact_list
 
-    def add_error_code_to_knowledge_graph(self, error_code: str, fault_condition: str,
-                                          suspect_components: List[str]) -> None:
+    def add_error_code_to_knowledge_graph(
+            self, error_code: str, fault_condition: str, suspect_components: List[str]
+    ) -> None:
         """
         Adds an error code instance with the given properties to the knowledge graph.
 
@@ -385,8 +391,9 @@ class ExpertKnowledgeEnhancer:
         assert isinstance(fault_condition, str)
         assert isinstance(suspect_components, list)
 
-        new_error_code_knowledge = ErrorCodeKnowledge(error_code=error_code, fault_condition=fault_condition,
-                                                      suspect_components=suspect_components)
+        new_error_code_knowledge = ErrorCodeKnowledge(
+            error_code=error_code, fault_condition=fault_condition, suspect_components=suspect_components
+        )
         fact_list = self.generate_error_code_related_facts(new_error_code_knowledge)
         self.fuseki_connection.extend_knowledge_graph(fact_list)
 
@@ -405,8 +412,9 @@ class ExpertKnowledgeEnhancer:
         fact_list = self.generate_suspect_component_facts([new_component_knowledge])
         self.fuseki_connection.extend_knowledge_graph(fact_list)
 
-    def add_component_set_to_knowledge_graph(self, component_set: str, includes: List[str],
-                                             verified_by: List[str]) -> None:
+    def add_component_set_to_knowledge_graph(
+            self, component_set: str, includes: List[str], verified_by: List[str]
+    ) -> None:
         """
         Adds a component set instance to the knowledge graph.
 
@@ -418,8 +426,9 @@ class ExpertKnowledgeEnhancer:
         assert isinstance(includes, list)
         assert isinstance(verified_by, list)
 
-        new_comp_set_knowledge = ComponentSetKnowledge(component_set=component_set, includes=includes,
-                                                       verified_by=verified_by)
+        new_comp_set_knowledge = ComponentSetKnowledge(
+            component_set=component_set, includes=includes, verified_by=verified_by
+        )
         fact_list = self.generate_component_set_facts(new_comp_set_knowledge)
         self.fuseki_connection.extend_knowledge_graph(fact_list)
 
