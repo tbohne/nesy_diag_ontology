@@ -13,14 +13,14 @@ from nesy_diag_ontology.connection_controller import ConnectionController
 class KnowledgeGraphQueryTool:
     """
     Library of numerous predefined SPARQL queries and response processing for accessing useful information stored in
-    the knowledge graph hosted on a Fuseki server.
+    the knowledge graph hosted on a 'Fuseki' server.
     """
 
     def __init__(self, kg_url: str = FUSEKI_URL, verbose: bool = True) -> None:
         """
         Initializes the KG query tool.
 
-        :param kg_url: URL for the server hosting the knowledge graph
+        :param kg_url: URL of the server hosting the knowledge graph
         :param verbose: whether the KG query tool should log its actions
         """
         self.ontology_prefix = ONTOLOGY_PREFIX
@@ -151,7 +151,7 @@ class KnowledgeGraphQueryTool:
             print(colored("QUERY: component set by name - " + set_name, "green", "on_grey", ["bold"]))
             print("########################################################################")
         component_set_entry = self.complete_ontology_entry('ComponentSet')
-        set_name_entry = self.complete_ontology_entry('component_set_name')
+        set_name_entry = self.complete_ontology_entry('set_name')
         s = f"""
             SELECT ?comp_set WHERE {{
                 ?comp_set a {component_set_entry} .
@@ -161,66 +161,67 @@ class KnowledgeGraphQueryTool:
             """
         return [row['comp_set']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, True)]
 
-    def query_diag_subject_instance_by_id(self, id: str) -> List[str]:
+    def query_diag_entity_instance_by_id(self, entity_id: str) -> List[str]:
         """
-        Queries a diagnosis subject instance by its ID.
+        Queries a diagnosis entity instance by its ID.
 
-        :param id: ID to query diagnosis subject instance for
-        :return: diag subject instance
+        :param entity_id: ID to query diagnosis entity instance for
+        :return: diag entity instance
         """
         if self.verbose:
             print("########################################################################")
-            print(colored("QUERY: diag subject instance by ID " + id, "green", "on_grey", ["bold"]))
+            print(colored("QUERY: diag entity instance by ID " + entity_id, "green", "on_grey", ["bold"]))
             print("########################################################################")
-        diag_subject_entry = self.complete_ontology_entry('DiagSubject')
-        id_entry = self.complete_ontology_entry('subject_id')
+        diag_entity_entry = self.complete_ontology_entry('DiagEntity')
+        id_entry = self.complete_ontology_entry('entity_id')
         s = f"""
-            SELECT ?diag_subject WHERE {{
-                ?diag_subject a {diag_subject_entry} .
-                ?diag_subject {id_entry} "{id}" .
+            SELECT ?diag_entity WHERE {{
+                ?diag_entity a {diag_entity_entry} .
+                ?diag_entity {id_entry} "{entity_id}" .
             }}
             """
-        return [row['diag_subject']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, True)]
+        return [row['diag_entity']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, True)]
 
-    def query_diag_subject_by_error_code(self, error_code: str, verbose: bool = True) -> List[
-        Tuple[str, str, str, str]]:
+    def query_diag_entity_by_error_code(
+            self, error_code: str, verbose: bool = True
+    ) -> List[Tuple[str, str, str, str]]:
         """
-        Queries diag subjects in which the specified error code occurred in the past.
+        Queries diag entities in which the specified error code occurred in the past.
 
-        :param error_code: error code to query diag subjects for
+        :param error_code: error code to query diag entities for
         :param verbose: if true, logging is activated
-        :return: diag subjects
+        :return: diag entities
         """
         if verbose and self.verbose:
             print("########################################################################")
             print(
-                colored("QUERY: diag subjects associated with error code " + error_code, "green", "on_grey", ["bold"]))
+                colored("QUERY: diag entities associated with error code " + error_code, "green", "on_grey", ["bold"])
+            )
             print("########################################################################")
         error_code_entry = self.complete_ontology_entry('ErrorCode')
         diag_log_entry = self.complete_ontology_entry('DiagLog')
         appears_in_entry = self.complete_ontology_entry('appearsIn')
         created_for_entry = self.complete_ontology_entry('createdFor')
         fault_cond_class = self.complete_ontology_entry('FaultCondition')
-        diag_subject_class = self.complete_ontology_entry('DiagSubject')
+        diag_entity_class = self.complete_ontology_entry('DiagEntity')
         represents_entry = self.complete_ontology_entry('represents')
-        subject_id_entry = self.complete_ontology_entry('subject_id')
+        entity_id_entry = self.complete_ontology_entry('entity_id')
         code_entry = self.complete_ontology_entry('code')
         s = f"""
-            SELECT ?subject_id WHERE {{
+            SELECT ?entity_id WHERE {{
                 ?diag_log a {diag_log_entry} .
                 ?error_code {appears_in_entry} ?diag_log .
-                ?diag_log {created_for_entry} ?diag_subject .
+                ?diag_log {created_for_entry} ?diag_entity .
                 ?fc a {fault_cond_class} .
-                ?diag_subject a {diag_subject_class} .
+                ?diag_entity a {diag_entity_class} .
                 ?error_code {represents_entry} ?fc .
                 ?error_code a {error_code_entry} .
                 ?error_code {code_entry} ?error_code_code .
-                ?diag_subject {subject_id_entry} ?subject_id .
+                ?diag_entity {entity_id_entry} ?entity_id .
                 FILTER(STR(?error_code_code) = "{error_code}")
             }}
             """
-        return [(row['subject_id']['value']) for row in
-                self.fuseki_connection.query_knowledge_graph(s, verbose)]
+        return [(row['entity_id']['value']) for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
     def query_all_error_code_instances(self, verbose: bool = True) -> List[str]:
         """
@@ -309,7 +310,8 @@ class KnowledgeGraphQueryTool:
         return [row['error_code']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, True)]
 
     def query_diag_association_instance_by_error_code_and_sus_comp(
-            self, error_code: str, comp: str, verbose: bool = True) -> List[str]:
+            self, error_code: str, comp: str, verbose: bool = True
+    ) -> List[str]:
         """
         Queries the diagnostic association instance for the specified code and suspect component.
 
@@ -320,8 +322,12 @@ class KnowledgeGraphQueryTool:
         """
         if verbose and self.verbose:
             print("########################################################################")
-            print(colored("QUERY: diagnostic association by error code + suspect component: " + error_code + ", " +
-                          comp, "green", "on_grey", ["bold"]))
+            print(
+                colored(
+                    "QUERY: diagnostic association by error code + suspect component: " + error_code + ", " + comp,
+                    "green", "on_grey", ["bold"]
+                )
+            )
             print("########################################################################")
         error_code_entry = self.complete_ontology_entry('ErrorCode')
         diag_association_entry = self.complete_ontology_entry('DiagnosticAssociation')
@@ -343,8 +349,9 @@ class KnowledgeGraphQueryTool:
             """
         return [row['diag_association']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
-    def query_priority_id_by_error_code_and_sus_comp(self, error_code: str, comp: str, verbose: bool = True) -> List[
-        str]:
+    def query_priority_id_by_error_code_and_sus_comp(
+            self, error_code: str, comp: str, verbose: bool = True
+    ) -> List[str]:
         """
         Queries the priority ID of the diagnostic association for the specified code and suspect component.
 
@@ -355,9 +362,12 @@ class KnowledgeGraphQueryTool:
         """
         if verbose and self.verbose:
             print("########################################################################")
-            print(colored(
-                "QUERY: diagnostic association priority by error code + suspect component: " + error_code + ", " +
-                comp, "green", "on_grey", ["bold"]))
+            print(
+                colored(
+                    "QUERY: diagnostic association priority by error code + component: " + error_code + ", " + comp,
+                    "green", "on_grey", ["bold"]
+                )
+            )
             print("########################################################################")
         error_code_entry = self.complete_ontology_entry('ErrorCode')
         diag_association_entry = self.complete_ontology_entry('DiagnosticAssociation')
@@ -381,56 +391,23 @@ class KnowledgeGraphQueryTool:
             """
         return [row['prio']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
-    def query_diag_association_by_error_code_and_sus_comp(self, error_code: str, comp: str, verbose: bool = True) -> \
-            List[str]:
-        """
-        Queries the diagnostic association for the specified code and suspect component.
-
-        :param error_code: error code to query diagnostic association for
-        :param comp: suspect component to query diagnostic association for
-        :param verbose: if true, logging is activated
-        :return: diagnostic association instance
-        """
-        if verbose and self.verbose:
-            print("########################################################################")
-            print(colored(
-                "QUERY: diagnostic association instance by error code + suspect component: " + error_code + ", " +
-                comp, "green", "on_grey", ["bold"]))
-            print("########################################################################")
-        error_code_entry = self.complete_ontology_entry('ErrorCode')
-        diag_association_entry = self.complete_ontology_entry('DiagnosticAssociation')
-        suspect_component_entry = self.complete_ontology_entry('SuspectComponent')
-        code_entry = self.complete_ontology_entry('code')
-        has_association_entry = self.complete_ontology_entry('hasAssociation')
-        comp_name_entry = self.complete_ontology_entry('component_name')
-        points_to_entry = self.complete_ontology_entry('pointsTo')
-        s = f"""
-            SELECT ?diag_association WHERE {{
-                ?diag_association a {diag_association_entry} .
-                ?error_code a {error_code_entry} .
-                ?error_code {code_entry} "{error_code}" .
-                ?error_code {has_association_entry} ?diag_association .
-                ?sus a {suspect_component_entry} .
-                ?sus {comp_name_entry} "{comp}" .
-                ?diag_association {points_to_entry} ?sus .
-            }}
-            """
-        return [row['diag_association']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
-
-    def query_generated_heatmaps_by_error_code_and_sus_comp(self, error_code: str, comp: str, verbose: bool = True) -> \
-            List[str]:
+    def query_generated_heatmaps_by_error_code_and_sus_comp(
+            self, error_code: str, comp: str, verbose: bool = True
+    ) -> List[str]:
         """
         Queries the generated heatmaps for the specified code and suspect component.
 
         :param error_code: error code to query generated heatmaps for
         :param comp: suspect component to query generated heatmaps for
         :param verbose: if true, logging is activated
-        :return: diagnostic association instance
+        :return: generated heatmaps
         """
         if verbose and self.verbose:
             print("########################################################################")
-            print(colored("QUERY: generated heatmaps by error code + suspect component: " + error_code + ", " +
-                          comp, "green", "on_grey", ["bold"]))
+            print(colored(
+                "QUERY: generated heatmaps by error code + suspect component: " + error_code + ", " + comp,
+                "green", "on_grey", ["bold"]
+            ))
             print("########################################################################")
         error_code_entry = self.complete_ontology_entry('ErrorCode')
         diag_association_entry = self.complete_ontology_entry('DiagnosticAssociation')
@@ -439,42 +416,50 @@ class KnowledgeGraphQueryTool:
         has_association_entry = self.complete_ontology_entry('hasAssociation')
         comp_name_entry = self.complete_ontology_entry('component_name')
         points_to_entry = self.complete_ontology_entry('pointsTo')
-        heatmap_entry = self.complete_ontology_entry('generated_heatmap')
+        heatmap_entry = self.complete_ontology_entry('Heatmap')
+        checks_entry = self.complete_ontology_entry('checks')
+        signal_classification_entry = self.complete_ontology_entry('SignalClassification')
+        produces_entry = self.complete_ontology_entry('produces')
+        gen_heatmap_entry = self.complete_ontology_entry('generated_heatmap')
         s = f"""
             SELECT ?heatmap_entry WHERE {{
                 ?diag_association a {diag_association_entry} .
-                ?diag_association {heatmap_entry} ?heatmap_entry .
                 ?error_code a {error_code_entry} .
-                ?error_code {code_entry} "{error_code}" .
-                ?error_code {has_association_entry} ?diag_association .
                 ?sus a {suspect_component_entry} .
-                ?sus {comp_name_entry} "{comp}" .
+                ?signal_classification a {signal_classification_entry} .
+                ?heatmap a {heatmap_entry} .
+                ?error_code {has_association_entry} ?diag_association .
                 ?diag_association {points_to_entry} ?sus .
+                ?signal_classification {checks_entry} ?sus .
+                ?signal_classification {produces_entry} ?heatmap .
+                ?error_code {code_entry} "{error_code}" .
+                ?sus {comp_name_entry} "{comp}" .
+                ?heatmap {gen_heatmap_entry} ?heatmap_entry .
             }}
             """
         return [row['heatmap_entry']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
-    def query_error_codes_by_subject_id(self, subject_id: str) -> List[str]:
+    def query_error_codes_by_entity_id(self, entity_id: str) -> List[str]:
         """
-        Queries the error codes for the specified subject ID.
+        Queries the error codes for the specified entity ID.
 
-        :param subject_id: subject ID to query error codes for
+        :param entity_id: entity ID to query error codes for
         :return: error codes
         """
         if self.verbose:
             print("########################################################################")
-            print(colored("QUERY: error codes by subject ID " + subject_id, "green", "on_grey", ["bold"]))
+            print(colored("QUERY: error codes by entity ID " + entity_id, "green", "on_grey", ["bold"]))
             print("########################################################################")
         error_code_entry = self.complete_ontology_entry('ErrorCode')
-        diag_subject_entry = self.complete_ontology_entry('DiagSubject')
+        diag_entity_entry = self.complete_ontology_entry('DiagEntity')
         code_entry = self.complete_ontology_entry('code')
-        subject_id_entry = self.complete_ontology_entry('subject_id')
+        entity_id_entry = self.complete_ontology_entry('entity_id')
         s = f"""
             SELECT ?code WHERE {{
                 ?error_code a {error_code_entry} .
                 ?error_code {code_entry} ?code .
-                ?diag_subject a {diag_subject_entry} .
-                ?diag_subject {subject_id_entry} "{subject_id}" .
+                ?diag_entity a {diag_entity_entry} .
+                ?diag_entity {entity_id_entry} "{entity_id}" .
             }}
             """
         return [row['code']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, True)]
@@ -489,8 +474,9 @@ class KnowledgeGraphQueryTool:
         """
         if verbose and self.verbose:
             print("########################################################################")
-            print(colored("QUERY: affecting components by component name "
-                          + component_name, "green", "on_grey", ["bold"]))
+            print(
+                colored("QUERY: affecting components by component name " + component_name, "green", "on_grey", ["bold"])
+            )
             print("########################################################################")
         comp_entry = self.complete_ontology_entry('SuspectComponent')
         name_entry = self.complete_ontology_entry('component_name')
@@ -514,13 +500,14 @@ class KnowledgeGraphQueryTool:
         """
         if verbose and self.verbose:
             print("########################################################################")
-            print(colored("QUERY: verified component set by component name "
-                          + component_name, "green", "on_grey", ["bold"]))
+            print(colored(
+                "QUERY: verified component set by component name " + component_name, "green", "on_grey", ["bold"]
+            ))
             print("########################################################################")
         comp_entry = self.complete_ontology_entry('SuspectComponent')
         name_entry = self.complete_ontology_entry('component_name')
         set_entry = self.complete_ontology_entry('ComponentSet')
-        set_name_entry = self.complete_ontology_entry('component_set_name')
+        set_name_entry = self.complete_ontology_entry('set_name')
         verifies_entry = self.complete_ontology_entry('verifies')
         s = f"""
             SELECT ?set_name WHERE {{
@@ -543,13 +530,14 @@ class KnowledgeGraphQueryTool:
         """
         if verbose and self.verbose:
             print("########################################################################")
-            print(colored("QUERY: verifying components by component set name "
-                          + set_name, "green", "on_grey", ["bold"]))
+            print(
+                colored("QUERY: verifying components by component set name " + set_name, "green", "on_grey", ["bold"])
+            )
             print("########################################################################")
         comp_entry = self.complete_ontology_entry('SuspectComponent')
         name_entry = self.complete_ontology_entry('component_name')
         component_set_entry = self.complete_ontology_entry('ComponentSet')
-        set_name_entry = self.complete_ontology_entry('component_set_name')
+        set_name_entry = self.complete_ontology_entry('set_name')
         verifies_entry = self.complete_ontology_entry('verifies')
         s = f"""
             SELECT ?comp_name WHERE {{
@@ -577,7 +565,7 @@ class KnowledgeGraphQueryTool:
         comp_entry = self.complete_ontology_entry('SuspectComponent')
         name_entry = self.complete_ontology_entry('component_name')
         comp_set_entry = self.complete_ontology_entry('ComponentSet')
-        set_name_entry = self.complete_ontology_entry('component_set_name')
+        set_name_entry = self.complete_ontology_entry('set_name')
         includes_entry = self.complete_ontology_entry('includes')
         s = f"""
             SELECT ?comp_name WHERE {{
@@ -611,48 +599,48 @@ class KnowledgeGraphQueryTool:
             """
         return [row['name']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
-    def query_all_diag_subject_instances(self, verbose: bool = True) -> List[Tuple[str, str]]:
+    def query_all_diag_entity_instances(self, verbose: bool = True) -> List[Tuple[str, str]]:
         """
-        Queries all diag subject instances stored in the knowledge graph.
+        Queries all diag entity instances stored in the knowledge graph.
 
         :param verbose: if true, logging is activated
-        :return: all diag subjects stored in the knowledge graph
+        :return: all diag entities stored in the knowledge graph
         """
         if verbose and self.verbose:
             print("####################################")
-            print("QUERY: all diag subject instances")
+            print("QUERY: all diag entity instances")
             print("####################################")
-        diag_subject_entry = self.complete_ontology_entry('DiagSubject')
-        subject_id_entry = self.complete_ontology_entry('subject_id')
+        diag_entity_entry = self.complete_ontology_entry('DiagEntity')
+        entity_id_entry = self.complete_ontology_entry('entity_id')
         s = f"""
-            SELECT ?diag_subject ?subject_id WHERE {{
-                ?diag_subject a {diag_subject_entry} .
-                ?diag_subject {subject_id_entry} ?subject_id .
+            SELECT ?diag_entity ?entity_id WHERE {{
+                ?diag_entity a {diag_entity_entry} .
+                ?diag_entity {entity_id_entry} ?entity_id .
             }}
             """
         return [
-            (row['diag_subject']['value'], row['subject_id']['value'])
+            (row['diag_entity']['value'], row['entity_id']['value'])
             for row in self.fuseki_connection.query_knowledge_graph(s, verbose)
         ]
 
-    def query_all_recorded_time_series(self, verbose: bool = True) -> List[str]:
+    def query_all_recorded_sensor_signals(self, verbose: bool = True) -> List[str]:
         """
-        Queries all recorded time series stored in the knowledge graph.
+        Queries all recorded sensor signals stored in the knowledge graph.
 
         :param verbose: if true, logging is activated
-        :return: all rec time series stored in the knowledge graph
+        :return: all rec sensor signals stored in the knowledge graph
         """
         if verbose and self.verbose:
             print("####################################")
-            print("QUERY: all rec time series instances")
+            print("QUERY: all rec sensor signal instances")
             print("####################################")
-        ts_entry = self.complete_ontology_entry('TimeSeries')
+        signal_entry = self.complete_ontology_entry('SensorSignal')
         s = f"""
-            SELECT ?ts WHERE {{
-                ?ts a {ts_entry} .
+            SELECT ?signal WHERE {{
+                ?signal a {signal_entry} .
             }}
             """
-        return [row['ts']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
+        return [row['signal']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
     def query_all_signal_classifications(self, verbose: bool = True) -> List[str]:
         """
@@ -671,8 +659,9 @@ class KnowledgeGraphQueryTool:
                 ?signal_classification a {signal_classification_entry} .
             }}
             """
-        return [row['signal_classification']['value'] for row in
-                self.fuseki_connection.query_knowledge_graph(s, verbose)]
+        return [
+            row['signal_classification']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)
+        ]
 
     def query_signal_classification_by_heatmap(self, heatmap_id: str, verbose: bool = True) -> List[str]:
         """
@@ -680,7 +669,7 @@ class KnowledgeGraphQueryTool:
 
         :param heatmap_id: heatmap instance to query signal classification for
         :param verbose: if true, logging is activated
-        :return: all signal classifications stored in the knowledge graph
+        :return: signal classification for the specified heatmap
         """
         if verbose and self.verbose:
             print("####################################")
@@ -699,8 +688,9 @@ class KnowledgeGraphQueryTool:
                 FILTER(STR(?heatmap) = "{id_entry}") .
             }}
             """
-        return [row['signal_classification']['value'] for row in
-                self.fuseki_connection.query_knowledge_graph(s, verbose)]
+        return [
+            row['signal_classification']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)
+        ]
 
     def query_all_manual_inspection_instances(self, verbose: bool = True) -> List[str]:
         """
@@ -759,8 +749,9 @@ class KnowledgeGraphQueryTool:
             """
         return [row['fault_path']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
-    def query_model_id_by_signal_classification_id(self, signal_classification_id: str, verbose: bool = True) -> List[
-        str]:
+    def query_model_id_by_signal_classification_id(
+            self, signal_classification_id: str, verbose: bool = True
+    ) -> List[str]:
         """
         Queries the model ID for the specified signal classification instance.
 
@@ -773,14 +764,18 @@ class KnowledgeGraphQueryTool:
             print("QUERY: model ID for the specified signal classification:", signal_classification_id)
             print("####################################")
         signal_classification_entry = self.complete_ontology_entry('SignalClassification')
+        model_entry = self.complete_ontology_entry('Model')
         id_entry = self.complete_ontology_entry(signal_classification_id)
         id_entry = id_entry.replace('<', '').replace('>', '')
         model_id_entry = self.complete_ontology_entry('model_id')
+        performs_entry = self.complete_ontology_entry('performs')
         s = f"""
             SELECT ?model_id WHERE {{
                 ?signal_classification a {signal_classification_entry} .
+                ?model a {model_entry} .
+                ?model {performs_entry} ?signal_classification .
                 FILTER(STR(?signal_classification) = "{id_entry}") .
-                ?signal_classification {model_id_entry} ?model_id .
+                ?model {model_id_entry} ?model_id .
             }}
             """
         return [row['model_id']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
@@ -811,7 +806,8 @@ class KnowledgeGraphQueryTool:
         return [row['comp_name']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
     def query_uncertainty_by_signal_classification_id(
-            self, signal_classification_id: str, verbose: bool = True) -> List[str]:
+            self, signal_classification_id: str, verbose: bool = True
+    ) -> List[str]:
         """
         Queries the uncertainty for the specified signal classification instance.
 
@@ -886,34 +882,34 @@ class KnowledgeGraphQueryTool:
             """
         return [row['fault_cond']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
-    def query_error_codes_recorded_in_diag_subject(self, diag_subject_id: str, verbose: bool = True) -> List[str]:
+    def query_error_codes_recorded_in_diag_entity(self, diag_entity_id: str, verbose: bool = True) -> List[str]:
         """
-        Queries the error codes recorded in the specified diag subject.
+        Queries the error codes recorded in the specified diag entity.
 
-        :param diag_subject_id: ID of the diag subject to retrieve error codes for
+        :param diag_entity_id: ID of the diag entity to retrieve error codes for
         :param verbose: if true, logging is activated
-        :return: error codes for the diag subject instance
+        :return: error codes for the diag entity instance
         """
         if verbose and self.verbose:
             print("####################################")
-            print("QUERY: error codes for the specified diag subject:", diag_subject_id)
+            print("QUERY: error codes for the specified diag entity:", diag_entity_id)
             print("####################################")
         error_code_entry = self.complete_ontology_entry('ErrorCode')
         diag_log_entry = self.complete_ontology_entry('DiagLog')
-        diag_subject_entry = self.complete_ontology_entry('DiagSubject')
-        id_entry = self.complete_ontology_entry(diag_subject_id)
+        diag_entity_entry = self.complete_ontology_entry('DiagEntity')
+        id_entry = self.complete_ontology_entry(diag_entity_id)
         id_entry = id_entry.replace('<', '').replace('>', '')
         appears_in_entry = self.complete_ontology_entry('appearsIn')
         created_for_entry = self.complete_ontology_entry('createdFor')
         code_entry = self.complete_ontology_entry('code')
         s = f"""
             SELECT ?code WHERE {{
-                ?diag_subject a {diag_subject_entry} .
-                FILTER(STR(?diag_subject) = "{id_entry}") .
+                ?diag_entity a {diag_entity_entry} .
+                FILTER(STR(?diag_entity) = "{id_entry}") .
                 ?diag_log a {diag_log_entry} .
                 ?error_code a {error_code_entry} .
                 ?error_code {appears_in_entry} ?diag_log .
-                ?diag_log {created_for_entry} ?diag_subject .
+                ?diag_log {created_for_entry} ?diag_entity .
                 ?error_code {code_entry} ?code .
             }}
             """
@@ -1044,81 +1040,82 @@ class KnowledgeGraphQueryTool:
             """
         return [row['cond_desc']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
-    def query_diag_subject_by_diag_log(self, diag_log_id: str, verbose: bool = True) -> List[str]:
+    def query_diag_entity_by_diag_log(self, diag_log_id: str, verbose: bool = True) -> List[str]:
         """
-        Queries the diag subject for the specified diag log instance.
+        Queries the diag entity for the specified diag log instance.
 
-        :param diag_log_id: ID of the diag log instance to query diag subject for
+        :param diag_log_id: ID of the diag log instance to query diag entity for
         :param verbose: if true, logging is activated
-        :return: diag subject for diag log instance
+        :return: diag entity for diag log instance
         """
         if verbose and self.verbose:
             print("####################################")
-            print("QUERY: diag subject for the specified diag log:", diag_log_id)
+            print("QUERY: diag entity for the specified diag log:", diag_log_id)
             print("####################################")
         diag_log_entry = self.complete_ontology_entry('DiagLog')
         id_entry = self.complete_ontology_entry(diag_log_id)
         id_entry = id_entry.replace('<', '').replace('>', '')
         created_for_entry = self.complete_ontology_entry('createdFor')
         s = f"""
-            SELECT ?diag_subject WHERE {{
+            SELECT ?diag_entity WHERE {{
                 ?diag_log a {diag_log_entry} .
                 FILTER(STR(?diag_log) = "{id_entry}") .
-                ?diag_log {created_for_entry} ?diag_subject .
+                ?diag_log {created_for_entry} ?diag_entity .
             }}
             """
-        return [row['diag_subject']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
+        return [row['diag_entity']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
-    def query_time_series_by_ts_instance(self, ts_id: str, verbose: bool = True) -> List[str]:
+    def query_signal_by_sensor_signal_instance(self, sensor_signal_id: str, verbose: bool = True) -> List[str]:
         """
-        Queries the time series for the specified `TimeSeries` instance.
+        Queries the signal for the specified `SensorSignal` instance.
 
-        :param ts_id: ID of the `TimeSeries` instance to query time series for
+        :param sensor_signal_id: ID of the `SensorSignal` instance to query signal for
         :param verbose: if true, logging is activated
-        :return: time series for `TimeSeries` instance
+        :return: signal for `SensorSignal` instance
         """
         if verbose and self.verbose:
             print("####################################")
-            print("QUERY: time series for the specified `TimeSeries`:", ts_id)
+            print("QUERY: signal for the specified `SensorSignal`:", sensor_signal_id)
             print("####################################")
-        ts_entry = self.complete_ontology_entry('TimeSeries')
-        id_entry = self.complete_ontology_entry(ts_id)
+        sensor_signal_entry = self.complete_ontology_entry('SensorSignal')
+        id_entry = self.complete_ontology_entry(sensor_signal_id)
         id_entry = id_entry.replace('<', '').replace('>', '')
-        time_series_entry = self.complete_ontology_entry('time_series')
+        signal_entry = self.complete_ontology_entry('signal')
         s = f"""
-            SELECT ?time_series WHERE {{
-                ?ts a {ts_entry} .
+            SELECT ?signal WHERE {{
+                ?sensor_signal a {sensor_signal_entry} .
                 FILTER(STR(?ts) = "{id_entry}") .
-                ?ts {time_series_entry} ?time_series .
+                ?sensor_signal {signal_entry} ?signal .
             }}
             """
-        return [row['time_series']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
+        return [row['signal']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
-    def query_time_series_by_classification_instance(
-            self, signal_classification_id: str, verbose: bool = True) -> List[str]:
+    def query_sensor_signal_by_classification_instance(
+            self, signal_classification_id: str, verbose: bool = True
+    ) -> List[str]:
         """
-        Queries the time series instance for the specified classification.
+        Queries the sensor signal instance for the specified classification.
 
         :param signal_classification_id: ID of signal classification instance
         :param verbose: if true, logging is activated
-        :return: time series instance
+        :return: sensor signal instance
         """
         if verbose and self.verbose:
             print("####################################")
-            print("QUERY: time series instance for the specified classification:", signal_classification_id)
+            print("QUERY: sensor signal instance for the specified classification:", signal_classification_id)
             print("####################################")
         signal_classification_entry = self.complete_ontology_entry('SignalClassification')
         id_entry = self.complete_ontology_entry(signal_classification_id)
         id_entry = id_entry.replace('<', '').replace('>', '')
         classifies_entry = self.complete_ontology_entry('classifies')
         s = f"""
-            SELECT ?ts WHERE {{
+            SELECT ?sensor_signal WHERE {{
                 ?signal_classification a {signal_classification_entry} .
                 FILTER(STR(?signal_classification) = "{id_entry}") .
-                ?signal_classification {classifies_entry} ?ts .
+                ?signal_classification {classifies_entry} ?sensor_signal .
             }}
             """
-        return [row['ts']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
+        return [row['sensor_signal']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
     def query_suspect_component_by_classification(self, classification_id: str, verbose: bool = True) -> List[str]:
         """
@@ -1276,8 +1273,9 @@ class KnowledgeGraphQueryTool:
             """
         return [row['pred']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
-    def query_heatmap_by_classification_instance(self, signal_classification_id: str, verbose: bool = True) -> List[
-        str]:
+    def query_heatmap_by_classification_instance(
+            self, signal_classification_id: str, verbose: bool = True
+    ) -> List[str]:
         """
         Queries the heatmap instance for the specified classification.
 
@@ -1383,7 +1381,7 @@ class KnowledgeGraphQueryTool:
             print("QUERY: all component set instances")
             print("####################################")
         component_set_entry = self.complete_ontology_entry('ComponentSet')
-        set_name_entry = self.complete_ontology_entry('component_set_name')
+        set_name_entry = self.complete_ontology_entry('set_name')
         s = f"""
             SELECT ?set_name WHERE {{
                 ?comp_set a {component_set_entry} .
@@ -1393,7 +1391,7 @@ class KnowledgeGraphQueryTool:
         return [row['set_name']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
     @staticmethod
-    def print_res(res: list) -> None:
+    def print_res(res: List[str]) -> None:
         """
         Prints the specified query results.
 
@@ -1406,8 +1404,8 @@ class KnowledgeGraphQueryTool:
 if __name__ == '__main__':
     qt = KnowledgeGraphQueryTool()
     qt.print_res(qt.query_all_error_code_instances())
-    error_code = "E0001"
-    suspect_comp_name = "C0001"
+    error_code = "E0"
+    suspect_comp_name = "C45"
     fault_cond_desc = "Random Fault Cond. 0"
     dummy_id = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     qt.print_res(qt.query_fault_condition_by_error_code(error_code))
