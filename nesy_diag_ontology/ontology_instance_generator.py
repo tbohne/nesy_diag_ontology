@@ -208,15 +208,15 @@ if __name__ == '__main__':
     instance_gen = OntologyInstanceGenerator()
     instance_gen.extend_knowledge_graph_with_diag_subject_data("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ")
     # create some test instances
-    causing_error_code = "E0001"
+    causing_error_code = "E0"
     fault_cond_uuid = instance_gen.knowledge_graph_query_tool.query_fault_condition_instance_by_code(
         causing_error_code)[0].split("#")[1]
-    list_of_error_codes = ["E0002", "E0003", "E0004", "E0005"]
-    fault_path = "C0001 -> C0002 -> C0003"
+    list_of_error_codes = ["E0", "E1", "E2", "E3"]
+    fault_path = "C45 -> C1 -> C2"
     ts = [13.3, 13.6, 14.6, 16.7, 8.5, 9.7, 5.5, 3.6, 12.5, 12.7]
     test_heatmap = [0.4, 0.3, 0.7, 0.7, 0.8, 0.9, 0.3, 0.2]
-    sus_comp = "C0001"
-    manual_sus_comp = "C0002"
+    sus_comp = "C45"
+    manual_sus_comp = "C1"
     test_ts_id = instance_gen.extend_knowledge_graph_with_time_series(ts)
     test_heatmap_id = instance_gen.extend_knowledge_graph_with_heatmap("GradCAM", test_heatmap)
     test_fault_path_id = instance_gen.extend_knowledge_graph_with_fault_path(fault_path, fault_cond_uuid)
