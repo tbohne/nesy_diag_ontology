@@ -29,5 +29,5 @@ class ErrorCodeKnowledge:
 
         :return: string representation of error code knowledge
         """
-        return "Error code: " + self.error_code + "\nFault Condition: " + self.fault_condition \
+        return "Error Code: " + self.error_code + "\nFault Condition: " + self.fault_condition \
             + "\nSuspect Components: " + str(self.suspect_components)
