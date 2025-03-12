@@ -44,8 +44,11 @@ class ConnectionController:
         if verbose and self.verbose:
             print("query knowledge graph..")
             print(query)
-        res = requests.post(self.fuseki_url + SPARQL_ENDPOINT, query.encode(),
-                            headers={'Content-Type': 'application/sparql-query', 'Accept': 'application/json'})
+        res = requests.post(
+            self.fuseki_url + SPARQL_ENDPOINT,
+            query.encode(),
+            headers={'Content-Type': 'application/sparql-query', 'Accept': 'application/json'}
+        )
         if res.status_code != 200:
             print("HTTP status code:", res.status_code)
         return res.json()["results"]["bindings"]
@@ -54,13 +57,13 @@ class ConnectionController:
         """
         Sends an HTTP request containing the facts to be entered into the knowledge graph to the knowledge graph server.
 
-        :param facts: facts to be entered into the knowledge graph
+        :param facts: semantic facts to be entered into the knowledge graph
         """
         if self.verbose:
             print(colored("\nextending knowledge graph..", "green", "on_grey", ["bold"]))
         graph = Graph()
         for fact in facts:
-            # for very long facts, only print the first segment (e.g. heatmaps)
+            # for very long facts, only print the first segment (e.g., heatmaps)
             if self.verbose:
                 print("fact:", str(fact)[:200] + "..." if len(str(fact)) > 0 else fact)
             if fact.property_fact:
@@ -68,8 +71,11 @@ class ConnectionController:
             else:
                 graph.add((self.get_uri(fact.triple[0]), self.get_uri(fact.triple[1]), self.get_uri(fact.triple[2])))
 
-        res = requests.post(self.fuseki_url + DATA_ENDPOINT, data=graph.serialize(format="ttl").encode(),
-                            headers={'Content-Type': 'text/turtle'})
+        res = requests.post(
+            self.fuseki_url + DATA_ENDPOINT,
+            data=graph.serialize(format="ttl").encode(),
+            headers={'Content-Type': 'text/turtle'}
+        )
         if res.status_code != 200:
             print("HTTP status code:", res.status_code)
 
@@ -77,7 +83,7 @@ class ConnectionController:
         """
         Sends an HTTP request containing the facts to be removed from the knowledge graph.
 
-        :param facts: facts to be removed from the knowledge graph
+        :param facts: semantic facts to be removed from the knowledge graph
         """
         if self.verbose:
             print(colored("\nremoving facts from knowledge graph..", "green", "on_grey", ["bold"]))
@@ -121,14 +127,14 @@ class ConnectionController:
 
 if __name__ == '__main__':
     connection = ConnectionController(ONTOLOGY_PREFIX)
-    # query example
+    # general query example
     q = "SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 25"
     response = connection.query_knowledge_graph(q, True)
     print(response)
     # extension example
     onto_namespace = Namespace(ONTOLOGY_PREFIX)
     fact_list = [
-        Fact(('subject_0', RDF.type, onto_namespace["DiagSubject"].toPython())),
-        Fact(("subject_0", onto_namespace.subject_id, '0000001'), property_fact=True)
+        Fact(('entity_0', RDF.type, onto_namespace["DiagEntity"].toPython())),
+        Fact(("entity_0", onto_namespace.subject_id, '0000001'), property_fact=True)
     ]
     connection.extend_knowledge_graph(fact_list)
