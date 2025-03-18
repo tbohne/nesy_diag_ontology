@@ -1084,7 +1084,7 @@ class KnowledgeGraphQueryTool:
         s = f"""
             SELECT ?signal WHERE {{
                 ?sensor_signal a {sensor_signal_entry} .
-                FILTER(STR(?ts) = "{id_entry}") .
+                FILTER(STR(?sensor_signal) = "{id_entry}") .
                 ?sensor_signal {signal_entry} ?signal .
             }}
             """
