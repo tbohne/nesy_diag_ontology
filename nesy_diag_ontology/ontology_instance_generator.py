@@ -3,7 +3,7 @@
 # @author Tim Bohne
 
 import uuid
-from typing import List
+from typing import List, Union
 
 from owlready2 import *
 from rdflib import Namespace, RDF
@@ -105,7 +105,7 @@ class OntologyInstanceGenerator:
 
     def extend_knowledge_graph_with_signal_classification(
             self, prediction: bool, classification_reason: str, comp: str, uncertainty: float, model_id: str,
-            signal_id: str, heatmap_id: str
+            signal_ids: Union[str, List[str]], heatmap_ids: Union[str, List[str]]
     ) -> str:
         """
         Extends the knowledge graph with semantic facts for a signal classification.
@@ -115,8 +115,8 @@ class OntologyInstanceGenerator:
         :param comp: classified component
         :param uncertainty: uncertainty of the prediction
         :param model_id: ID of the used classification model
-        :param signal_id: ID of the classified sensor signal
-        :param heatmap_id: ID of the generated heatmap
+        :param signal_ids: ID(s) of the classified sensor signal(s)
+        :param heatmap_ids: ID(s) of the generated heatmap(s)
         :return ID of signal classification instance
         """
         # either ID of DA or ID of another classification
@@ -132,10 +132,17 @@ class OntologyInstanceGenerator:
             Fact((classification_uuid, self.onto_namespace.uncertainty, uncertainty), property_fact=True),
             Fact((classification_uuid, self.onto_namespace.model_id, model_id), property_fact=True),
             # relations
-            Fact((classification_uuid, self.onto_namespace.checks, comp_id)),
-            Fact((classification_uuid, self.onto_namespace.classifies, signal_id)),
-            Fact((classification_uuid, self.onto_namespace.produces, heatmap_id))
+            Fact((classification_uuid, self.onto_namespace.checks, comp_id))
         ]
+        if isinstance(signal_ids, str):
+            signal_ids = [signal_ids]
+        if isinstance(heatmap_ids, str):
+            heatmap_ids = [heatmap_ids]
+        for signal_id in signal_ids:
+            fact_list.append(Fact((classification_uuid, self.onto_namespace.classifies, signal_id)))
+        for heatmap_id in heatmap_ids:
+            fact_list.append(Fact((classification_uuid, self.onto_namespace.produces, heatmap_id)))
+
         if "diag_association_" in classification_reason:
             fact_list.append(Fact((classification_reason, self.onto_namespace.ledTo, classification_uuid)))
         else:  # the reason is a classification instance (manual or signal)
@@ -160,11 +167,14 @@ class OntologyInstanceGenerator:
         self.fuseki_connection.extend_knowledge_graph(fact_list)
         return heatmap_uuid
 
-    def extend_knowledge_graph_with_sensor_signal(self, sensor_signal: List[float]) -> str:
+    def extend_knowledge_graph_with_sensor_signal(
+            self, sensor_signal: List[float], parallel_rec_set_id: str = ""
+    ) -> str:
         """
         Extends the knowledge graph with semantic facts for a sensor signal.
 
         :param sensor_signal: sensor signal
+        :param parallel_rec_set_id: optional ID of a set of parallel recordings this signal should be assigned to
         :return: signal ID
         """
         signal_uuid = "sensor_signal_" + uuid.uuid4().hex
@@ -172,8 +182,31 @@ class OntologyInstanceGenerator:
             Fact((signal_uuid, RDF.type, self.onto_namespace["SensorSignal"].toPython())),
             Fact((signal_uuid, self.onto_namespace.signal, str(sensor_signal)), property_fact=True)
         ]
+        if parallel_rec_set_id != "":  # signal part of parallelly recorded set?
+            fact_list.append(Fact((signal_uuid, self.onto_namespace.partOf, parallel_rec_set_id)))
         self.fuseki_connection.extend_knowledge_graph(fact_list)
         return signal_uuid
+
+    def extend_knowledge_graph_with_overlays_relation(self, heatmap_id: str, signal_id: str) -> None:
+        """
+        Extends the knowledge graph with semantic facts for 'overlays' relations between heatmaps and signals.
+
+        :param heatmap_id: ID of the heatmap that overlays the signal
+        :param signal_id: ID of the signal
+        """
+        fact_list = [Fact((heatmap_id, self.onto_namespace.overlays, signal_id))]
+        self.fuseki_connection.extend_knowledge_graph(fact_list)
+
+    def extend_knowledge_graph_with_parallel_rec_signal_set(self) -> str:
+        """
+        Extends the knowledge graph with semantic facts for a set of parallel recorded signals.
+
+        :return: signal set ID
+        """
+        signal_set_uuid = "parallel_rec_signal_set_" + uuid.uuid4().hex
+        fact_list = [Fact((signal_set_uuid, RDF.type, self.onto_namespace["ParallelRecSignalSet"].toPython()))]
+        self.fuseki_connection.extend_knowledge_graph(fact_list)
+        return signal_set_uuid
 
     def extend_knowledge_graph_with_manual_inspection(
             self, prediction: bool, classification_reason: str, comp: str
