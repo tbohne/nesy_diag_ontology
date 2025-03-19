@@ -17,7 +17,7 @@ from nesy_diag_ontology.knowledge_graph_query_tool import KnowledgeGraphQueryToo
 class OntologyInstanceGenerator:
     """
     Enhances the KG with diagnosis-specific instance data, i.e., it connects the diag data recorded in a particular
-    diag subject, as well as sensor readings, classifications, etc. generated during the diagnostic process, with
+    diag entity, as well as sensor readings, classifications, etc. generated during the diagnostic process, with
     corresponding background knowledge stored in the KG.
     """
 
@@ -25,7 +25,7 @@ class OntologyInstanceGenerator:
         """
         Initializes the ontology instance generator.
 
-        :param kg_url: URL for the knowledge graph server
+        :param kg_url: URL of the knowledge graph server
         :param verbose: whether the ontology instance generator should log its actions
         """
         # establish connection to Apache Jena Fuseki server
@@ -34,28 +34,28 @@ class OntologyInstanceGenerator:
         self.onto_namespace = Namespace(ONTOLOGY_PREFIX)
         self.verbose = verbose
 
-    def extend_knowledge_graph_with_diag_subject_data(self, subject_id: str) -> None:
+    def extend_knowledge_graph_with_diag_entity_data(self, entity_id: str) -> None:
         """
-        Extends the knowledge graph with semantic facts based on the present diag subject information.
+        Extends the knowledge graph with semantic facts based on the present diag entity information.
 
-        :param subject_id: ID of the diagnostic subject
+        :param entity_id: ID of the diagnostic entity
         """
-        diag_subject_uuid = "diag_subject_" + str(uuid.uuid4())
+        diag_entity_uuid = "diag_entity_" + str(uuid.uuid4())
         fact_list = []
-        diag_subject_instance = self.knowledge_graph_query_tool.query_diag_subject_instance_by_id(subject_id)
-        if len(diag_subject_instance) > 0:
+        diag_entity_instance = self.knowledge_graph_query_tool.query_diag_entity_instance_by_id(entity_id)
+        if len(diag_entity_instance) > 0:
             if self.verbose:
-                print("Diag. subject (" + subject_id + ") already part of the KG")
+                print("Diag. entity (" + entity_id + ") already part of the KG")
         else:
             fact_list = [
-                Fact((diag_subject_uuid, RDF.type, self.onto_namespace["DiagSubject"].toPython())),
-                Fact((diag_subject_uuid, self.onto_namespace.subject_id, subject_id), property_fact=True)
+                Fact((diag_entity_uuid, RDF.type, self.onto_namespace["DiagEntity"].toPython())),
+                Fact((diag_entity_uuid, self.onto_namespace.entity_id, entity_id), property_fact=True)
             ]
         self.fuseki_connection.extend_knowledge_graph(fact_list)
 
     def extend_knowledge_graph_with_diag_log(
             self, diag_date: str, error_code_instances: List[str], fault_path_instances: List[str],
-            classification_instances: List[str], diag_subject_id: str
+            classification_instances: List[str], diag_entity_id: str
     ) -> str:
         """
         Extends the knowledge graph with semantic facts for a diagnosis log.
@@ -64,7 +64,7 @@ class OntologyInstanceGenerator:
         :param error_code_instances: error code instances part of the diagnosis
         :param fault_path_instances: IDs of fault path instances part of the diagnosis
         :param classification_instances: IDs of classification instances part of the diagnosis
-        :param diag_subject_id: ID of the diagnostic subject the diag log is created for
+        :param diag_entity_id: ID of the diagnostic entity the diag log is created for
         :return ID of diagnosis log
         """
         diag_log_uuid = "diag_log_" + uuid.uuid4().hex
@@ -82,7 +82,7 @@ class OntologyInstanceGenerator:
             fact_list.append(Fact((diag_log_uuid, self.onto_namespace.entails, fault_path_id)))
         for classification_id in classification_instances:
             fact_list.append(Fact((classification_id, self.onto_namespace.diagStep, diag_log_uuid)))
-        fact_list.append(Fact((diag_log_uuid, self.onto_namespace.createdFor, diag_subject_id)))
+        fact_list.append(Fact((diag_log_uuid, self.onto_namespace.createdFor, diag_entity_id)))
         self.fuseki_connection.extend_knowledge_graph(fact_list)
         return diag_log_uuid
 
@@ -103,9 +103,10 @@ class OntologyInstanceGenerator:
         self.fuseki_connection.extend_knowledge_graph(fact_list)
         return fault_path_uuid
 
-    def extend_knowledge_graph_with_signal_classification(self, prediction: bool, classification_reason: str,
-                                                          comp: str, uncertainty: float, model_id: str,
-                                                          ts_id: str, heatmap_id: str) -> str:
+    def extend_knowledge_graph_with_signal_classification(
+            self, prediction: bool, classification_reason: str, comp: str, uncertainty: float, model_id: str,
+            signal_id: str, heatmap_id: str
+    ) -> str:
         """
         Extends the knowledge graph with semantic facts for a signal classification.
 
@@ -114,7 +115,7 @@ class OntologyInstanceGenerator:
         :param comp: classified component
         :param uncertainty: uncertainty of the prediction
         :param model_id: ID of the used classification model
-        :param ts_id: ID of the classified time series
+        :param signal_id: ID of the classified sensor signal
         :param heatmap_id: ID of the generated heatmap
         :return ID of signal classification instance
         """
@@ -132,12 +133,12 @@ class OntologyInstanceGenerator:
             Fact((classification_uuid, self.onto_namespace.model_id, model_id), property_fact=True),
             # relations
             Fact((classification_uuid, self.onto_namespace.checks, comp_id)),
-            Fact((classification_uuid, self.onto_namespace.classifies, ts_id)),
+            Fact((classification_uuid, self.onto_namespace.classifies, signal_id)),
             Fact((classification_uuid, self.onto_namespace.produces, heatmap_id))
         ]
         if "diag_association_" in classification_reason:
             fact_list.append(Fact((classification_reason, self.onto_namespace.ledTo, classification_uuid)))
-        else:  # the reason is a classification instance (manual or osci)
+        else:  # the reason is a classification instance (manual or signal)
             fact_list.append(Fact((classification_reason, self.onto_namespace.reasonFor, classification_uuid)))
         self.fuseki_connection.extend_knowledge_graph(fact_list)
         return classification_uuid
@@ -159,20 +160,20 @@ class OntologyInstanceGenerator:
         self.fuseki_connection.extend_knowledge_graph(fact_list)
         return heatmap_uuid
 
-    def extend_knowledge_graph_with_time_series(self, time_series: List[float]) -> str:
+    def extend_knowledge_graph_with_sensor_signal(self, sensor_signal: List[float]) -> str:
         """
-        Extends the knowledge graph with semantic facts for a time series.
+        Extends the knowledge graph with semantic facts for a sensor signal.
 
-        :param time_series: time series, i.e., the signal
-        :return: time series ID
+        :param sensor_signal: sensor signal
+        :return: signal ID
         """
-        osci_uuid = "time_series_" + uuid.uuid4().hex
+        signal_uuid = "sensor_signal_" + uuid.uuid4().hex
         fact_list = [
-            Fact((osci_uuid, RDF.type, self.onto_namespace["TimeSeries"].toPython())),
-            Fact((osci_uuid, self.onto_namespace.time_series, str(time_series)), property_fact=True)
+            Fact((signal_uuid, RDF.type, self.onto_namespace["SensorSignal"].toPython())),
+            Fact((signal_uuid, self.onto_namespace.signal, str(sensor_signal)), property_fact=True)
         ]
         self.fuseki_connection.extend_knowledge_graph(fact_list)
-        return osci_uuid
+        return signal_uuid
 
     def extend_knowledge_graph_with_manual_inspection(
             self, prediction: bool, classification_reason: str, comp: str
@@ -198,7 +199,7 @@ class OntologyInstanceGenerator:
         ]
         if "diag_association_" in classification_reason:
             fact_list.append(Fact((classification_reason, self.onto_namespace.ledTo, classification_uuid)))
-        else:  # the reason is a classification instance (manual or osci)
+        else:  # the reason is a classification instance (manual or signal)
             fact_list.append(Fact((classification_reason, self.onto_namespace.reasonFor, classification_uuid)))
         self.fuseki_connection.extend_knowledge_graph(fact_list)
         return classification_uuid
@@ -206,27 +207,28 @@ class OntologyInstanceGenerator:
 
 if __name__ == '__main__':
     instance_gen = OntologyInstanceGenerator()
-    instance_gen.extend_knowledge_graph_with_diag_subject_data("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    instance_gen.extend_knowledge_graph_with_diag_entity_data("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ")
     # create some test instances
     causing_error_code = "E0"
     fault_cond_uuid = instance_gen.knowledge_graph_query_tool.query_fault_condition_instance_by_code(
-        causing_error_code)[0].split("#")[1]
+        causing_error_code
+    )[0].split("#")[1]
     list_of_error_codes = ["E0", "E1", "E2", "E3"]
     fault_path = "C45 -> C1 -> C2"
-    ts = [13.3, 13.6, 14.6, 16.7, 8.5, 9.7, 5.5, 3.6, 12.5, 12.7]
+    signal = [13.3, 13.6, 14.6, 16.7, 8.5, 9.7, 5.5, 3.6, 12.5, 12.7]
     test_heatmap = [0.4, 0.3, 0.7, 0.7, 0.8, 0.9, 0.3, 0.2]
     sus_comp = "C45"
     manual_sus_comp = "C1"
-    test_ts_id = instance_gen.extend_knowledge_graph_with_time_series(ts)
+    test_signal_id = instance_gen.extend_knowledge_graph_with_sensor_signal(signal)
     test_heatmap_id = instance_gen.extend_knowledge_graph_with_heatmap("GradCAM", test_heatmap)
     test_fault_path_id = instance_gen.extend_knowledge_graph_with_fault_path(fault_path, fault_cond_uuid)
 
     test_classification_instances = [
         instance_gen.extend_knowledge_graph_with_signal_classification(
-            True, "diag_association_3592495", sus_comp, 0.45, "test_model_id", test_ts_id, test_heatmap_id
+            True, "diag_association_3592495", sus_comp, 0.45, "test_model_id", test_signal_id, test_heatmap_id
         ),
         instance_gen.extend_knowledge_graph_with_signal_classification(
-            True, "signal_classification_3543595", sus_comp, 0.85, "test_model_id", test_ts_id, test_heatmap_id
+            True, "signal_classification_3543595", sus_comp, 0.85, "test_model_id", test_signal_id, test_heatmap_id
         ),
         instance_gen.extend_knowledge_graph_with_manual_inspection(
             False, "signal_classification_45395859345", manual_sus_comp
