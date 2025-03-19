@@ -14,6 +14,8 @@ from nesy_diag_ontology.connection_controller import ConnectionController
 from nesy_diag_ontology.error_code_knowledge import ErrorCodeKnowledge
 from nesy_diag_ontology.fact import Fact
 from nesy_diag_ontology.knowledge_graph_query_tool import KnowledgeGraphQueryTool
+from nesy_diag_ontology.model_knowledge import ModelKnowledge
+from nesy_diag_ontology.sub_component_knowledge import SubComponentKnowledge
 
 
 class ExpertKnowledgeEnhancer:
@@ -316,10 +318,62 @@ class ExpertKnowledgeEnhancer:
             else:
                 fact_list.append(Fact((comp_uuid, RDF.type, self.onto_namespace["SuspectComponent"].toPython())))
                 fact_list.append(Fact((comp_uuid, self.onto_namespace.component_name, comp_name), property_fact=True))
+
+            # draw channel connections - assumes that the channels are already part of the KG
+            for chan in comp_knowledge.associated_chan:
+                associated_chan_instance = self.knowledge_graph_query_tool.query_channel_by_name(chan)
+                associated_chan_uuid = associated_chan_instance[0].split("#")[1]
+                fact_list.append(Fact((comp_uuid, self.onto_namespace.hasChannel, associated_chan_uuid)))
+            for coi in comp_knowledge.chan_of_interest:
+                channel_instance = self.knowledge_graph_query_tool.query_channel_by_name(coi)
+                channel_uuid = channel_instance[0].split("#")[1]
+                fact_list.append(Fact((comp_uuid, self.onto_namespace.hasCOI, channel_uuid)))
+
             for comp in comp_knowledge.affected_by:
                 # all components in the affected_by list should be defined in the KG, i.e., should have ex. 1 result
                 assert len(self.knowledge_graph_query_tool.query_suspect_component_by_name(comp)) == 1
                 fact_list.append(Fact((comp_uuid, self.onto_namespace.affected_by, comp), property_fact=True))
+        return fact_list
+
+    def generate_sub_component_facts(self, sub_comp_knowledge_list: List[SubComponentKnowledge]) -> List[Fact]:
+        """
+        Generates the `SubComponent`-related facts to be entered into the knowledge graph.
+
+        :param sub_comp_knowledge_list: list of parsed subcomponents
+        :return: generated fact list
+        """
+        fact_list = []
+        for sub_comp_knowledge in sub_comp_knowledge_list:
+            sub_comp_name = sub_comp_knowledge.sub_component
+            sub_comp_uuid = "sub_comp_" + uuid.uuid4().hex
+            # check whether subcomponent to be added is already part of the KG
+            sub_comp_instance = self.knowledge_graph_query_tool.query_sub_component_by_name(sub_comp_name)
+            if len(sub_comp_instance) > 0:
+                print("Specified subcomponent (" + sub_comp_name + ") already present in KG")
+                sub_comp_uuid = sub_comp_instance[0].split("#")[1]
+            else:
+                fact_list.append(Fact((sub_comp_uuid, RDF.type, self.onto_namespace["SubComponent"].toPython())))
+                fact_list.append(
+                    Fact((sub_comp_uuid, self.onto_namespace.component_name, sub_comp_name), property_fact=True)
+                )
+            # connect to associated suspect component
+            suspect_comp_instance = self.knowledge_graph_query_tool.query_suspect_component_by_name(
+                sub_comp_knowledge.associated_suspect_component
+            )
+            suspect_comp_uuid = suspect_comp_instance[0].split("#")[1]
+            fact_list.append(Fact((sub_comp_uuid, self.onto_namespace.elementOf, suspect_comp_uuid)))
+
+            # draw channel connections - assumes that the channels are already part of the KG
+            associated_chan_instance = self.knowledge_graph_query_tool.query_channel_by_name(
+                sub_comp_knowledge.associated_chan
+            )
+            associated_chan_uuid = associated_chan_instance[0].split("#")[1]
+            fact_list.append(Fact((sub_comp_uuid, self.onto_namespace.hasChannel, associated_chan_uuid)))
+            channel_instance = self.knowledge_graph_query_tool.query_channel_by_name(
+                sub_comp_knowledge.chan_of_interest
+            )
+            channel_uuid = channel_instance[0].split("#")[1]
+            fact_list.append(Fact((sub_comp_uuid, self.onto_namespace.hasCOI, channel_uuid)))
         return fact_list
 
     def generate_component_set_facts(self, comp_set_knowledge: ComponentSetKnowledge) -> List[Fact]:
@@ -361,6 +415,64 @@ class ExpertKnowledgeEnhancer:
 
         return fact_list
 
+    def generate_model_facts(self, model_knowledge: ModelKnowledge) -> List[Fact]:
+        """
+        Generates classification model facts to be entered into the knowledge graph.
+
+        :param model_knowledge: model knowledge
+        :return: generated fact list
+        """
+        model_uuid = "model_" + uuid.uuid4().hex
+        # model property facts
+        fact_list = [
+            Fact((model_uuid, RDF.type, self.onto_namespace["Model"].toPython())),
+            Fact((model_uuid, self.onto_namespace.input_shape, model_knowledge.input_len), property_fact=True),
+            Fact(
+                (model_uuid, self.onto_namespace.exp_normalization_method, model_knowledge.exp_norm_method),
+                property_fact=True
+            ),
+            Fact(
+                (model_uuid, self.onto_namespace.measuring_instruction, model_knowledge.measuring_instruction),
+                property_fact=True
+            ),
+            Fact((model_uuid, self.onto_namespace.model_id, model_knowledge.model_id), property_fact=True),
+            Fact((model_uuid, self.onto_namespace.architecture, model_knowledge.architecture), property_fact=True)
+        ]
+
+        # input channel requirements
+        for idx, channel in model_knowledge.input_chan_req:
+            channel_instance = self.knowledge_graph_query_tool.query_channel_by_name(channel)
+            channel_uuid = channel_instance[0].split("#")[1]
+            input_chan_req_uuid = "input_chan_req_" + uuid.uuid4().hex
+            fact_list.append(
+                Fact((input_chan_req_uuid, RDF.type, self.onto_namespace["InputChannelRequirement"].toPython()))
+            )
+            fact_list.append(
+                Fact((input_chan_req_uuid, self.onto_namespace.channel_idx, idx), property_fact=True),
+            )
+            fact_list.append(Fact((input_chan_req_uuid, self.onto_namespace.expects, channel_uuid)))
+            fact_list.append(Fact((model_uuid, self.onto_namespace.hasRequirement, input_chan_req_uuid)))
+
+        # suspect component to be assessed
+        sus_comp = self.knowledge_graph_query_tool.query_suspect_component_by_name(model_knowledge.classified_comp)
+        sus_comp_uuid = sus_comp[0].split("#")[1]
+        fact_list.append(Fact((model_uuid, self.onto_namespace.assesses, sus_comp_uuid)))
+        return fact_list
+
+    def generate_channel_facts(self, channel_name: str) -> List[Fact]:
+        """
+        Generates channel facts to be entered into the knowledge graph.
+
+        :param channel_name: name of the channel
+        :return: generated fact list
+        """
+        channel_uuid = "channel_" + uuid.uuid4().hex
+        fact_list = [
+            Fact((channel_uuid, RDF.type, self.onto_namespace["Channel"].toPython())),
+            Fact((channel_uuid, self.onto_namespace.channel_name, channel_name), property_fact=True)
+        ]
+        return fact_list
+
     def generate_error_code_related_facts(self, error_code_knowledge: ErrorCodeKnowledge) -> List[Fact]:
         """
         Generates all facts obtained from the error code form / template to be entered into the knowledge graph.
@@ -397,19 +509,51 @@ class ExpertKnowledgeEnhancer:
         fact_list = self.generate_error_code_related_facts(new_error_code_knowledge)
         self.fuseki_connection.extend_knowledge_graph(fact_list)
 
-    def add_component_to_knowledge_graph(self, suspect_component: str, affected_by: List[str]) -> None:
+    def add_component_to_knowledge_graph(
+            self, suspect_component: str, affected_by: List[str], associated_chan: List[str] = [],
+            chan_of_interest: List[str] = []
+    ) -> None:
         """
         Adds a component instance with the given properties to the knowledge graph.
 
         :param suspect_component: component to be checked
         :param affected_by: list of components whose misbehavior could affect the correct functioning of the component
                             under consideration
+        :param associated_chan: channels associated with the component (via 'hasChannel')
+        :param chan_of_interest: list of channels associated with the component (via 'hasCOI')
         """
         assert isinstance(suspect_component, str)
         assert isinstance(affected_by, list)
+        assert isinstance(associated_chan, list)
+        assert isinstance(chan_of_interest, list)
 
-        new_component_knowledge = ComponentKnowledge(suspect_component=suspect_component, affected_by=affected_by)
+        new_component_knowledge = ComponentKnowledge(
+            suspect_component=suspect_component, affected_by=affected_by, associated_chan=associated_chan,
+            chan_of_interest=chan_of_interest
+        )
         fact_list = self.generate_suspect_component_facts([new_component_knowledge])
+        self.fuseki_connection.extend_knowledge_graph(fact_list)
+
+    def add_sub_component_to_knowledge_graph(self, sub_component: str, suspect_component: str) -> None:
+        """
+        Adds a `SubComponent` instance with the given properties to the knowledge graph.
+
+        Although subcomponents can have multiple COI and associated channels based on the ontology (inherited),
+        we restrict it to exactly one channel (hasCOI == hasChannel) for the moment.
+        Also, the name of the subcomponent is always the channel name atm.
+
+        :param sub_component: subcomponent to be added
+        :param suspect_component: corresponding suspect component
+        """
+        assert isinstance(sub_component, str)
+        assert isinstance(suspect_component, str)
+        new_sub_component_knowledge = SubComponentKnowledge(
+            sub_component=sub_component,
+            associated_suspect_component=suspect_component,
+            associated_chan=sub_component,
+            chan_of_interest=sub_component
+        )
+        fact_list = self.generate_sub_component_facts([new_sub_component_knowledge])
         self.fuseki_connection.extend_knowledge_graph(fact_list)
 
     def add_component_set_to_knowledge_graph(
@@ -432,6 +576,61 @@ class ExpertKnowledgeEnhancer:
         fact_list = self.generate_component_set_facts(new_comp_set_knowledge)
         self.fuseki_connection.extend_knowledge_graph(fact_list)
 
+    def add_model_to_knowledge_graph(
+            self, input_len: int, exp_norm_method: str, measuring_instruction: str, model_id: str, classified_comp: str,
+            input_chan_req: List[Tuple[int, str]], architecture: str
+    ) -> None:
+        """
+        Adds a model instance to the knowledge graph.
+
+        :param input_len: model's expected input length
+        :param exp_norm_method: expected normalization method for input data
+        :param measuring_instruction: instructions to be satisfied while recording new data
+        :param model_id: ID of the model
+        :param classified_comp: component the model is suited to classify
+        :param input_chan_req: input channel requirements
+        :param architecture: architecture type of the model
+        """
+        assert isinstance(input_len, int)
+        assert isinstance(exp_norm_method, str)
+        assert isinstance(measuring_instruction, str)
+        assert isinstance(model_id, str)
+        assert isinstance(classified_comp, str)
+        assert isinstance(architecture, str)
+
+        new_model_knowledge = ModelKnowledge(
+            input_len, exp_norm_method, measuring_instruction, model_id, classified_comp, input_chan_req, architecture
+        )
+        fact_list = self.generate_model_facts(new_model_knowledge)
+        self.fuseki_connection.extend_knowledge_graph(fact_list)
+
+    def add_channel_to_knowledge_graph(self, channel_name: str) -> None:
+        """
+        Adds a channel instance to the knowledge graph.
+
+        :param channel_name: name of the channel
+        """
+        assert isinstance(channel_name, str)
+        fact_list = self.generate_channel_facts(channel_name)
+        self.fuseki_connection.extend_knowledge_graph(fact_list)
+
 
 if __name__ == '__main__':
     expert_knowledge_enhancer = ExpertKnowledgeEnhancer()
+
+    # create channels before model
+    expert_knowledge_enhancer.add_channel_to_knowledge_graph("chan0")
+    expert_knowledge_enhancer.add_channel_to_knowledge_graph("chan1")
+    expert_knowledge_enhancer.add_channel_to_knowledge_graph("chan2")
+
+    # example: the component itself has one channel, but two more are of interest
+    expert_knowledge_enhancer.add_component_to_knowledge_graph(
+        "TestComp", [], ["chan0"], ["chan0", "chan1", "chan2"]
+    )
+
+    # we don't classify the union of `hasChannel` and `hasCOI`, we only classify COI
+    # (`hasChannel` is only providing the information of "where" (component) a channel is supposed to be recorded)
+    # create model
+    expert_knowledge_enhancer.add_model_to_knowledge_graph(
+        42, "z-norm", "measure x", "42qq#34", "TestComp", [(0, "chan0"), (1, "chan1"), (2, "chan2")], "CNN"
+    )
