@@ -780,6 +780,29 @@ class KnowledgeGraphQueryTool:
             """
         return [row['model_id']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
 
+    def query_model_by_model_id(self, model_id: str, verbose: bool = True) -> List[str]:
+        """
+        Queries the model for the specified model ID.
+
+        :param model_id: ID of the model to query instance for
+        :param verbose: if true, logging is activated
+        :return: model instance
+        """
+        if verbose and self.verbose:
+            print("####################################")
+            print("QUERY: model instance for the specified ID:", model_id)
+            print("####################################")
+        model_entry = self.complete_ontology_entry('Model')
+        model_id_entry = self.complete_ontology_entry('model_id')
+        s = f"""
+            SELECT ?model WHERE {{
+                ?model a {model_entry} .
+                ?model {model_id_entry} ?model_id .
+                FILTER(STR(?model_id) = "{model_id}")
+            }}
+            """
+        return [row['model']['value'] for row in self.fuseki_connection.query_knowledge_graph(s, verbose)]
+
     def query_suspect_component_name_by_id(self, component_id: str, verbose: bool = True) -> List[str]:
         """
         Queries the suspect component name for the specified component ID.
@@ -1504,3 +1527,4 @@ if __name__ == '__main__':
     qt.print_res(qt.query_heatmap_string_by_heatmap(dummy_id))
     qt.print_res(qt.query_all_heatmap_instances(False))
     qt.print_res(qt.query_all_component_set_instances(False))
+    qt.print_res(qt.query_model_by_model_id("42qq#34"))
