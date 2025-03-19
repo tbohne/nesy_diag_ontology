@@ -122,7 +122,8 @@ class OntologyInstanceGenerator:
         # either ID of DA or ID of another classification
         assert "diag_association_" in classification_reason or "manual_inspection_" in classification_reason \
                or "signal_classification_" in classification_reason
-        comp_id = self.knowledge_graph_query_tool.query_suspect_component_by_name(comp)[0].split("#")[1]
+        comp_uuid = self.knowledge_graph_query_tool.query_suspect_component_by_name(comp)[0].split("#")[1]
+        model_uuid = self.knowledge_graph_query_tool.query_model_by_model_id(model_id)[0].split("#")[1]
 
         classification_uuid = "signal_classification_" + uuid.uuid4().hex
         fact_list = [
@@ -130,9 +131,9 @@ class OntologyInstanceGenerator:
             # properties
             Fact((classification_uuid, self.onto_namespace.prediction, prediction), property_fact=True),
             Fact((classification_uuid, self.onto_namespace.uncertainty, uncertainty), property_fact=True),
-            Fact((classification_uuid, self.onto_namespace.model_id, model_id), property_fact=True),
             # relations
-            Fact((classification_uuid, self.onto_namespace.checks, comp_id))
+            Fact((classification_uuid, self.onto_namespace.checks, comp_uuid)),
+            Fact((model_uuid, self.onto_namespace.performs, classification_uuid))
         ]
         if isinstance(signal_ids, str):
             signal_ids = [signal_ids]
@@ -258,10 +259,10 @@ if __name__ == '__main__':
 
     test_classification_instances = [
         instance_gen.extend_knowledge_graph_with_signal_classification(
-            True, "diag_association_3592495", sus_comp, 0.45, "test_model_id", test_signal_id, test_heatmap_id
+            True, "diag_association_3592495", sus_comp, 0.45, "42qq#34", test_signal_id, test_heatmap_id
         ),
         instance_gen.extend_knowledge_graph_with_signal_classification(
-            True, "signal_classification_3543595", sus_comp, 0.85, "test_model_id", test_signal_id, test_heatmap_id
+            True, "signal_classification_3543595", sus_comp, 0.85, "42qq#34", test_signal_id, test_heatmap_id
         ),
         instance_gen.extend_knowledge_graph_with_manual_inspection(
             False, "signal_classification_45395859345", manual_sus_comp
