@@ -1,0 +1,792 @@
+###########################################################################
+###########################################################################
+#################### EXPERT KNOWLEDGE STORED IN THE KG ####################
+###########################################################################
+###########################################################################
+
+###########################################################################
+KNOWLEDGE SNAPSHOT - ERROR CODE PERSPECTIVE
+###########################################################################
+
+E0
+	- fault condition: FC0
+	- diag entity occurrences:
+	- ordered suspect components:
+		- C45
+			affected by: ['C7', 'C127', 'C106', 'C98', 'C77', 'C8', 'C105', 'C15', 'C104', 'C115']
+			verifies: []
+		- C15
+			affected by: ['C40', 'C16', 'C66']
+			verifies: []
+		- C93
+			affected by: ['C35', 'C122', 'C79', 'C116']
+			verifies: []
+		- C116
+			affected by: ['C22']
+			verifies: []
+		- C26
+			affected by: ['C24', 'C47', 'C1', 'C46', 'C77', 'C23', 'C75', 'C63', 'C52', 'C87']
+			verifies: []
+		- C73
+			affected by: []
+			verifies: []
+		- C97
+			affected by: ['C74', 'C18', 'C126', 'C34', 'C8', 'C56', 'C39', 'C75', 'C63']
+			verifies: []
+		- C27
+			affected by: ['C107', 'C110', 'C34', 'C51', 'C119', 'C71', 'C21', 'C87', 'C116', 'C62', 'C73']
+			verifies: []
+		- C18
+			affected by: ['C3', 'C25', 'C77', 'C81', 'C117', 'C119', 'C64', 'C91', 'C55']
+			verifies: []
+
+E1
+	- fault condition: FC1
+	- diag entity occurrences:
+	- ordered suspect components:
+		- C123
+			affected by: ['C5', 'C78', 'C66', 'C64', 'C91', 'C73', 'C92', 'C85']
+			verifies: []
+		- C114
+			affected by: ['C24', 'C88', 'C58', 'C82', 'C59', 'C56', 'C79', 'C75', 'C87']
+			verifies: []
+		- C101
+			affected by: ['C109', 'C12', 'C2', 'C118', 'C126', 'C44', 'C34', 'C82', 'C97', 'C48', 'C76']
+			verifies: []
+
+E2
+	- fault condition: FC2
+	- diag entity occurrences:
+	- ordered suspect components:
+		- C109
+			affected by: ['C107', 'C108', 'C55']
+			verifies: []
+		- C26
+			affected by: ['C24', 'C47', 'C1', 'C46', 'C77', 'C23', 'C75', 'C63', 'C52', 'C87']
+			verifies: []
+		- C33
+			affected by: ['C46', 'C82', 'C105', 'C28', 'C16', 'C19', 'C62', 'C104', 'C41', 'C38']
+			verifies: []
+		- C1
+			affected by: ['C43']
+			verifies: []
+		- C83
+			affected by: ['C114', 'C125', 'C18', 'C34', 'C82', 'C13', 'C59', 'C56', 'C79', 'C94', 'C42', 'C100']
+			verifies: []
+		- C4
+			affected by: ['C114', 'C106', 'C122', 'C46', 'C118', 'C11', 'C125']
+			verifies: []
+		- C16
+			affected by: ['C50', 'C89']
+			verifies: []
+		- C11
+			affected by: ['C35', 'C97']
+			verifies: []
+		- C42
+			affected by: ['C23', 'C55']
+			verifies: []
+		- C104
+			affected by: ['C57', 'C16', 'C26', 'C36']
+			verifies: []
+		- C75
+			affected by: ['C108', 'C34', 'C54', 'C113']
+			verifies: []
+		- C52
+			affected by: ['C88', 'C0', 'C1', 'C3', 'C98', 'C44', 'C101']
+			verifies: []
+		- C30
+			affected by: ['C46', 'C58']
+			verifies: []
+
+E3
+	- fault condition: FC3
+	- diag entity occurrences:
+	- ordered suspect components:
+		- C39
+			affected by: ['C107', 'C7', 'C19', 'C20']
+			verifies: []
+		- C110
+			affected by: ['C65']
+			verifies: []
+		- C89
+			affected by: ['C35', 'C110', 'C83', 'C3', 'C4', 'C78', 'C44', 'C86', 'C8', 'C13', 'C64', 'C20']
+			verifies: []
+		- C12
+			affected by: ['C108', 'C80', 'C51', 'C28', 'C90', 'C96']
+			verifies: []
+		- C123
+			affected by: ['C5', 'C78', 'C66', 'C64', 'C91', 'C73', 'C92', 'C85']
+			verifies: []
+		- C14
+			affected by: ['C57', 'C37']
+			verifies: []
+		- C116
+			affected by: ['C22']
+			verifies: []
+
+E4
+	- fault condition: FC4
+	- diag entity occurrences:
+	- ordered suspect components:
+		- C1
+			affected by: ['C43']
+			verifies: []
+		- C125
+			affected by: ['C35', 'C40', 'C105', 'C66', 'C33', 'C20', 'C62', 'C84', 'C95', 'C124']
+			verifies: []
+		- C127
+			affected by: ['C121', 'C107', 'C123', 'C7', 'C35', 'C45', 'C125', 'C23', 'C22', 'C32', 'C92']
+			verifies: []
+		- C78
+			affected by: ['C11', 'C77', 'C51', 'C79', 'C65', 'C102', 'C87', 'C116', 'C30', 'C38', 'C112', 'C48']
+			verifies: []
+		- C128
+			affected by: ['C47', 'C122', 'C6', 'C25', 'C17', 'C16', 'C19', 'C124']
+			verifies: []
+		- C81
+			affected by: ['C121', 'C93', 'C43']
+			verifies: []
+		- C76
+			affected by: []
+			verifies: []
+		- C87
+			affected by: ['C114', 'C1', 'C27', 'C44', 'C91', 'C20', 'C101']
+			verifies: []
+		- C2
+			affected by: ['C43', 'C7', 'C35', 'C40', 'C110', 'C74', 'C45', 'C127']
+			verifies: []
+		- C27
+			affected by: ['C107', 'C110', 'C34', 'C51', 'C119', 'C71', 'C21', 'C87', 'C116', 'C62', 'C73']
+			verifies: []
+		- C116
+			affected by: ['C22']
+			verifies: []
+
+E5
+	- fault condition: FC5
+	- diag entity occurrences:
+	- ordered suspect components:
+		- C4
+			affected by: ['C114', 'C106', 'C122', 'C46', 'C118', 'C11', 'C125']
+			verifies: []
+		- C113
+			affected by: ['C105']
+			verifies: []
+
+E6
+	- fault condition: FC6
+	- diag entity occurrences:
+	- ordered suspect components:
+		- C37
+			affected by: ['C93', 'C3', 'C58', 'C31', 'C57', 'C91', 'C55', 'C32', 'C38', 'C115', 'C111', 'C42']
+			verifies: []
+		- C84
+			affected by: ['C114', 'C43', 'C3', 'C18', 'C98', 'C29', 'C117', 'C39', 'C52', 'C32', 'C111', 'C128']
+			verifies: []
+		- C53
+			affected by: ['C12', 'C0', 'C127', 'C106', 'C34', 'C56', 'C84']
+			verifies: []
+		- C74
+			affected by: ['C107', 'C88', 'C114', 'C43', 'C127', 'C5', 'C98', 'C105', 'C19', 'C20', 'C62', 'C67']
+			verifies: []
+		- C79
+			affected by: ['C105', 'C120', 'C14']
+			verifies: []
+		- C98
+			affected by: ['C93', 'C123', 'C127', 'C46', 'C118', 'C27', 'C89', 'C65', 'C94', 'C36', 'C48', 'C67']
+			verifies: []
+		- C38
+			affected by: ['C51', 'C79', 'C101', 'C36']
+			verifies: []
+		- C114
+			affected by: ['C24', 'C88', 'C58', 'C82', 'C59', 'C56', 'C79', 'C75', 'C87']
+			verifies: []
+		- C113
+			affected by: ['C105']
+			verifies: []
+		- C103
+			affected by: ['C11']
+			verifies: []
+		- C92
+			affected by: ['C69', 'C18', 'C77', 'C89', 'C65', 'C53', 'C112']
+			verifies: []
+		- C66
+			affected by: ['C91', 'C56', 'C49', 'C94', 'C102', 'C99']
+			verifies: []
+
+E7
+	- fault condition: FC7
+	- diag entity occurrences:
+	- ordered suspect components:
+		- C83
+			affected by: ['C114', 'C125', 'C18', 'C34', 'C82', 'C13', 'C59', 'C56', 'C79', 'C94', 'C42', 'C100']
+			verifies: []
+		- C25
+			affected by: ['C69', 'C127', 'C34', 'C31', 'C23', 'C120', 'C37', 'C59', 'C54', 'C49', 'C102']
+			verifies: []
+		- C56
+			affected by: ['C26', 'C73', 'C48', 'C60']
+			verifies: []
+		- C8
+			affected by: ['C107', 'C17', 'C80', 'C9', 'C82', 'C31', 'C61']
+			verifies: []
+		- C116
+			affected by: ['C22']
+			verifies: []
+		- C58
+			affected by: ['C24', 'C127', 'C98', 'C61', 'C71', 'C65']
+			verifies: []
+		- C96
+			affected by: ['C110', 'C106', 'C122', 'C6', 'C34', 'C90', 'C39', 'C62', 'C124']
+			verifies: []
+
+E8
+	- fault condition: FC8
+	- diag entity occurrences:
+	- ordered suspect components:
+		- C103
+			affected by: ['C11']
+			verifies: []
+		- C25
+			affected by: ['C69', 'C127', 'C34', 'C31', 'C23', 'C120', 'C37', 'C59', 'C54', 'C49', 'C102']
+			verifies: []
+		- C47
+			affected by: ['C4']
+			verifies: []
+		- C123
+			affected by: ['C5', 'C78', 'C66', 'C64', 'C91', 'C73', 'C92', 'C85']
+			verifies: []
+		- C66
+			affected by: ['C91', 'C56', 'C49', 'C94', 'C102', 'C99']
+			verifies: []
+		- C85
+			affected by: ['C111']
+			verifies: []
+		- C78
+			affected by: ['C11', 'C77', 'C51', 'C79', 'C65', 'C102', 'C87', 'C116', 'C30', 'C38', 'C112', 'C48']
+			verifies: []
+
+E9
+	- fault condition: FC9
+	- diag entity occurrences:
+	- ordered suspect components:
+		- C126
+			affected by: ['C127', 'C78', 'C117', 'C71']
+			verifies: []
+		- C110
+			affected by: ['C65']
+			verifies: []
+		- C37
+			affected by: ['C93', 'C3', 'C58', 'C31', 'C57', 'C91', 'C55', 'C32', 'C38', 'C115', 'C111', 'C42']
+			verifies: []
+		- C93
+			affected by: ['C35', 'C122', 'C79', 'C116']
+			verifies: []
+		- C90
+			affected by: ['C118', 'C71', 'C21', 'C116', 'C73']
+			verifies: []
+		- C53
+			affected by: ['C12', 'C0', 'C127', 'C106', 'C34', 'C56', 'C84']
+			verifies: []
+
+
+----------------------------------------------------------------------
+
+###########################################################################
+KNOWLEDGE SNAPSHOT - COMPONENT PERSPECTIVE
+###########################################################################
+
+C0
+	- affected by: ['C121', 'C107', 'C109', 'C12', 'C24', 'C47', 'C93', 'C88', 'C114', 'C69', 'C123']
+	- verifies: []
+C1
+	- affected by: ['C43']
+	- verifies: []
+C2
+	- affected by: ['C43', 'C7', 'C35', 'C40', 'C110', 'C74', 'C45', 'C127']
+	- verifies: []
+C3
+	- affected by: ['C35', 'C83']
+	- verifies: []
+C4
+	- affected by: ['C114', 'C106', 'C122', 'C46', 'C118', 'C11', 'C125']
+	- verifies: []
+C5
+	- affected by: ['C18', 'C108', 'C126', 'C10']
+	- verifies: []
+C6
+	- affected by: ['C7', 'C83', 'C98', 'C58']
+	- verifies: []
+C7
+	- affected by: ['C118', 'C25', 'C27', 'C77', 'C78', 'C17', 'C44', 'C70', 'C34', 'C86', 'C80']
+	- verifies: []
+C8
+	- affected by: ['C107', 'C17', 'C80', 'C9', 'C82', 'C31', 'C61']
+	- verifies: []
+C9
+	- affected by: ['C24', 'C45', 'C3', 'C25', 'C23', 'C105']
+	- verifies: []
+C10
+	- affected by: ['C98', 'C29', 'C120', 'C81']
+	- verifies: []
+C11
+	- affected by: ['C35', 'C97']
+	- verifies: []
+C12
+	- affected by: ['C108', 'C80', 'C51', 'C28', 'C90', 'C96']
+	- verifies: []
+C13
+	- affected by: []
+	- verifies: []
+C14
+	- affected by: ['C57', 'C37']
+	- verifies: []
+C15
+	- affected by: ['C40', 'C16', 'C66']
+	- verifies: []
+C16
+	- affected by: ['C50', 'C89']
+	- verifies: []
+C17
+	- affected by: ['C10', 'C9', 'C103', 'C68']
+	- verifies: []
+C18
+	- affected by: ['C3', 'C25', 'C77', 'C81', 'C117', 'C119', 'C64', 'C91', 'C55']
+	- verifies: []
+C19
+	- affected by: ['C58', 'C28', 'C16', 'C68', 'C59', 'C72', 'C71', 'C56', 'C33']
+	- verifies: []
+C20
+	- affected by: []
+	- verifies: []
+C21
+	- affected by: ['C107', 'C109', 'C93', 'C46', 'C4', 'C78', 'C31', 'C51', 'C19']
+	- verifies: []
+C22
+	- affected by: ['C40', 'C91', 'C79', 'C65', 'C54']
+	- verifies: []
+C23
+	- affected by: ['C0', 'C126', 'C78', 'C49', 'C94', 'C39']
+	- verifies: []
+C24
+	- affected by: ['C69', 'C96', 'C19', 'C39', 'C53', 'C75']
+	- verifies: []
+C25
+	- affected by: ['C69', 'C127', 'C34', 'C31', 'C23', 'C120', 'C37', 'C59', 'C54', 'C49', 'C102']
+	- verifies: []
+C26
+	- affected by: ['C24', 'C47', 'C1', 'C46', 'C77', 'C23', 'C75', 'C63', 'C52', 'C87']
+	- verifies: []
+C27
+	- affected by: ['C107', 'C110', 'C34', 'C51', 'C119', 'C71', 'C21', 'C87', 'C116', 'C62', 'C73']
+	- verifies: []
+C28
+	- affected by: ['C11']
+	- verifies: []
+C29
+	- affected by: []
+	- verifies: []
+C30
+	- affected by: ['C46', 'C58']
+	- verifies: []
+C31
+	- affected by: ['C47', 'C69', 'C46', 'C6', 'C70', 'C103', 'C56', 'C21', 'C63', 'C87', 'C101', 'C32']
+	- verifies: []
+C32
+	- affected by: ['C121', 'C110', 'C45', 'C97', 'C66', 'C71', 'C56', 'C79', 'C22', 'C63', 'C73']
+	- verifies: []
+C33
+	- affected by: ['C46', 'C82', 'C105', 'C28', 'C16', 'C19', 'C62', 'C104', 'C41', 'C38']
+	- verifies: []
+C34
+	- affected by: ['C125']
+	- verifies: []
+C35
+	- affected by: ['C77', 'C70', 'C105', 'C120', 'C55', 'C75', 'C116', 'C38']
+	- verifies: []
+C36
+	- affected by: ['C83', 'C34', 'C97', 'C57', 'C37', 'C50', 'C119', 'C112']
+	- verifies: []
+C37
+	- affected by: ['C93', 'C3', 'C58', 'C31', 'C57', 'C91', 'C55', 'C32', 'C38', 'C115', 'C111', 'C42']
+	- verifies: []
+C38
+	- affected by: ['C51', 'C79', 'C101', 'C36']
+	- verifies: []
+C39
+	- affected by: ['C107', 'C7', 'C19', 'C20']
+	- verifies: []
+C40
+	- affected by: ['C83', 'C34', 'C63']
+	- verifies: []
+C41
+	- affected by: []
+	- verifies: []
+C42
+	- affected by: ['C23', 'C55']
+	- verifies: []
+C43
+	- affected by: ['C88', 'C25', 'C77', 'C34', 'C13']
+	- verifies: []
+C44
+	- affected by: ['C58', 'C116']
+	- verifies: []
+C45
+	- affected by: ['C7', 'C127', 'C106', 'C98', 'C77', 'C8', 'C105', 'C15', 'C104', 'C115']
+	- verifies: []
+C46
+	- affected by: ['C123', 'C36']
+	- verifies: []
+C47
+	- affected by: ['C4']
+	- verifies: []
+C48
+	- affected by: ['C1', 'C23', 'C59', 'C52', 'C99']
+	- verifies: []
+C49
+	- affected by: ['C44', 'C20', 'C22', 'C63', 'C62']
+	- verifies: []
+C50
+	- affected by: ['C47', 'C5', 'C17', 'C68', 'C91', 'C55']
+	- verifies: []
+C51
+	- affected by: ['C127', 'C126', 'C13', 'C73', 'C99']
+	- verifies: []
+C52
+	- affected by: ['C88', 'C0', 'C1', 'C3', 'C98', 'C44', 'C101']
+	- verifies: []
+C53
+	- affected by: ['C12', 'C0', 'C127', 'C106', 'C34', 'C56', 'C84']
+	- verifies: []
+C54
+	- affected by: ['C122', 'C125', 'C77', 'C61', 'C96', 'C14', 'C66', 'C91', 'C19', 'C21', 'C49', 'C84']
+	- verifies: []
+C55
+	- affected by: ['C93', 'C69', 'C118', 'C9', 'C97', 'C103', 'C68', 'C56', 'C36']
+	- verifies: []
+C56
+	- affected by: ['C26', 'C73', 'C48', 'C60']
+	- verifies: []
+C57
+	- affected by: ['C110', 'C45', 'C2', 'C18', 'C5', 'C82', 'C37', 'C49']
+	- verifies: []
+C58
+	- affected by: ['C24', 'C127', 'C98', 'C61', 'C71', 'C65']
+	- verifies: []
+C59
+	- affected by: ['C109', 'C123', 'C11']
+	- verifies: []
+C60
+	- affected by: ['C10', 'C29', 'C49']
+	- verifies: []
+C61
+	- affected by: ['C98', 'C27', 'C29', 'C59', 'C128', 'C92']
+	- verifies: []
+C62
+	- affected by: ['C77']
+	- verifies: []
+C63
+	- affected by: ['C43', 'C127', 'C11', 'C125', 'C49', 'C53', 'C52', 'C48']
+	- verifies: []
+C64
+	- affected by: []
+	- verifies: []
+C65
+	- affected by: []
+	- verifies: []
+C66
+	- affected by: ['C91', 'C56', 'C49', 'C94', 'C102', 'C99']
+	- verifies: []
+C67
+	- affected by: ['C121', 'C40', 'C74', 'C13', 'C37', 'C66', 'C55', 'C52', 'C30', 'C42']
+	- verifies: []
+C68
+	- affected by: ['C25']
+	- verifies: []
+C69
+	- affected by: ['C24', 'C88', 'C3', 'C27', 'C89', 'C103', 'C49', 'C53', 'C75', 'C102', 'C67']
+	- verifies: []
+C70
+	- affected by: ['C12', 'C7', 'C126', 'C10', 'C86', 'C8', 'C81', 'C97', 'C59', 'C115', 'C95']
+	- verifies: []
+C71
+	- affected by: ['C6', 'C77', 'C29', 'C120', 'C51', 'C13', 'C91']
+	- verifies: []
+C72
+	- affected by: ['C40', 'C108', 'C98', 'C58', 'C77', 'C44', 'C97', 'C39', 'C87', 'C116']
+	- verifies: []
+C73
+	- affected by: []
+	- verifies: []
+C74
+	- affected by: ['C107', 'C88', 'C114', 'C43', 'C127', 'C5', 'C98', 'C105', 'C19', 'C20', 'C62', 'C67']
+	- verifies: []
+C75
+	- affected by: ['C108', 'C34', 'C54', 'C113']
+	- verifies: []
+C76
+	- affected by: []
+	- verifies: []
+C77
+	- affected by: ['C107', 'C118', 'C82', 'C103', 'C21', 'C115']
+	- verifies: []
+C78
+	- affected by: ['C11', 'C77', 'C51', 'C79', 'C65', 'C102', 'C87', 'C116', 'C30', 'C38', 'C112', 'C48']
+	- verifies: []
+C79
+	- affected by: ['C105', 'C120', 'C14']
+	- verifies: []
+C80
+	- affected by: ['C45', 'C108', 'C44', 'C120', 'C81', 'C38', 'C84']
+	- verifies: []
+C81
+	- affected by: ['C121', 'C93', 'C43']
+	- verifies: []
+C82
+	- affected by: ['C121', 'C1', 'C110', 'C80', 'C120', 'C72', 'C113']
+	- verifies: []
+C83
+	- affected by: ['C114', 'C125', 'C18', 'C34', 'C82', 'C13', 'C59', 'C56', 'C79', 'C94', 'C42', 'C100']
+	- verifies: []
+C84
+	- affected by: ['C114', 'C43', 'C3', 'C18', 'C98', 'C29', 'C117', 'C39', 'C52', 'C32', 'C111', 'C128']
+	- verifies: []
+C85
+	- affected by: ['C111']
+	- verifies: []
+C86
+	- affected by: ['C127', 'C106', 'C56', 'C53', 'C128']
+	- verifies: []
+C87
+	- affected by: ['C114', 'C1', 'C27', 'C44', 'C91', 'C20', 'C101']
+	- verifies: []
+C88
+	- affected by: ['C43', 'C127', 'C17', 'C80', 'C57', 'C56', 'C65', 'C104', 'C95', 'C85']
+	- verifies: []
+C89
+	- affected by: ['C35', 'C110', 'C83', 'C3', 'C4', 'C78', 'C44', 'C86', 'C8', 'C13', 'C64', 'C20']
+	- verifies: []
+C90
+	- affected by: ['C118', 'C71', 'C21', 'C116', 'C73']
+	- verifies: []
+C91
+	- affected by: ['C24', 'C61', 'C97', 'C101', 'C38', 'C112']
+	- verifies: []
+C92
+	- affected by: ['C69', 'C18', 'C77', 'C89', 'C65', 'C53', 'C112']
+	- verifies: []
+C93
+	- affected by: ['C35', 'C122', 'C79', 'C116']
+	- verifies: []
+C94
+	- affected by: ['C69', 'C52', 'C87', 'C60']
+	- verifies: []
+C95
+	- affected by: ['C68', 'C59', 'C33', 'C73']
+	- verifies: []
+C96
+	- affected by: ['C110', 'C106', 'C122', 'C6', 'C34', 'C90', 'C39', 'C62', 'C124']
+	- verifies: []
+C97
+	- affected by: ['C74', 'C18', 'C126', 'C34', 'C8', 'C56', 'C39', 'C75', 'C63']
+	- verifies: []
+C98
+	- affected by: ['C93', 'C123', 'C127', 'C46', 'C118', 'C27', 'C89', 'C65', 'C94', 'C36', 'C48', 'C67']
+	- verifies: []
+C99
+	- affected by: ['C40', 'C110', 'C9', 'C61', 'C96', 'C37', 'C65', 'C38', 'C85']
+	- verifies: []
+C100
+	- affected by: ['C47', 'C11', 'C57', 'C117', 'C22', 'C75', 'C99', 'C48', 'C95']
+	- verifies: []
+C101
+	- affected by: ['C109', 'C12', 'C2', 'C118', 'C126', 'C44', 'C34', 'C82', 'C97', 'C48', 'C76']
+	- verifies: []
+C102
+	- affected by: ['C12', 'C108', 'C5', 'C31', 'C61', 'C23', 'C57', 'C68', 'C91', 'C49', 'C124']
+	- verifies: []
+C103
+	- affected by: ['C11']
+	- verifies: []
+C104
+	- affected by: ['C57', 'C16', 'C26', 'C36']
+	- verifies: []
+C105
+	- affected by: []
+	- verifies: []
+C106
+	- affected by: ['C121', 'C88', 'C7', 'C2', 'C118', 'C4', 'C44', 'C57', 'C50', 'C54', 'C102']
+	- verifies: []
+C107
+	- affected by: ['C18', 'C80', 'C13', 'C117', 'C119', 'C52', 'C26']
+	- verifies: []
+C108
+	- affected by: ['C12', 'C110', 'C83', 'C126', 'C120', 'C68', 'C53', 'C32', 'C112']
+	- verifies: []
+C109
+	- affected by: ['C107', 'C108', 'C55']
+	- verifies: []
+C110
+	- affected by: ['C65']
+	- verifies: []
+C111
+	- affected by: []
+	- verifies: []
+C112
+	- affected by: ['C43', 'C6', 'C82', 'C66', 'C64', 'C41', 'C38']
+	- verifies: []
+C113
+	- affected by: ['C105']
+	- verifies: []
+C114
+	- affected by: ['C24', 'C88', 'C58', 'C82', 'C59', 'C56', 'C79', 'C75', 'C87']
+	- verifies: []
+C115
+	- affected by: ['C122', 'C28', 'C68', 'C64', 'C79', 'C22', 'C62']
+	- verifies: []
+C116
+	- affected by: ['C22']
+	- verifies: []
+C117
+	- affected by: ['C114', 'C46', 'C44', 'C70', 'C120', 'C72', 'C62', 'C113']
+	- verifies: []
+C118
+	- affected by: ['C7', 'C40', 'C2', 'C13', 'C52']
+	- verifies: []
+C119
+	- affected by: ['C93', 'C122', 'C118', 'C31', 'C28', 'C22', 'C75']
+	- verifies: []
+C120
+	- affected by: []
+	- verifies: []
+C121
+	- affected by: ['C12', 'C78', 'C34', 'C81', 'C13', 'C48', 'C113']
+	- verifies: []
+C122
+	- affected by: ['C40', 'C126', 'C98', 'C51', 'C13', 'C119']
+	- verifies: []
+C123
+	- affected by: ['C5', 'C78', 'C66', 'C64', 'C91', 'C73', 'C92', 'C85']
+	- verifies: []
+C124
+	- affected by: ['C23', 'C50', 'C49', 'C52', 'C115']
+	- verifies: []
+C125
+	- affected by: ['C35', 'C40', 'C105', 'C66', 'C33', 'C20', 'C62', 'C84', 'C95', 'C124']
+	- verifies: []
+C126
+	- affected by: ['C127', 'C78', 'C117', 'C71']
+	- verifies: []
+C127
+	- affected by: ['C121', 'C107', 'C123', 'C7', 'C35', 'C45', 'C125', 'C23', 'C22', 'C32', 'C92']
+	- verifies: []
+C128
+	- affected by: ['C47', 'C122', 'C6', 'C25', 'C17', 'C16', 'C19', 'C124']
+	- verifies: []
+TestComp
+	- affected by: []
+	- verifies: []
+
+----------------------------------------------------------------------
+
+###########################################################################
+KNOWLEDGE SNAPSHOT - COMPONENT SET PERSPECTIVE
+###########################################################################
+
+
+----------------------------------------------------------------------
+
+###########################################################################
+###########################################################################
+################## DIAGNOSIS KNOWLEDGE STORED IN THE KG ###################
+###########################################################################
+###########################################################################
+
+###########################################################################
+KNOWLEDGE SNAPSHOT - SENSOR SIGNAL PERSPECTIVE
+###########################################################################
+
+signal: sensor_signal_81306933a9894264ae576d80dcd80c13
+	- sensor signal excerpt: [13.3, 13.6, 14.6, 16.7, 8.5, 9.7, 5.5, 3.6, 12.5, ...
+
+----------------------------------------------------------------------
+
+###########################################################################
+KNOWLEDGE SNAPSHOT - SIGNAL CLASSIFICATION PERSPECTIVE
+###########################################################################
+
+signal_classification_9312e0cdeafa46c496c6d52d73b582a5
+	- model id: 42qq#34
+	- uncertainty: 0.45e0
+	- classifies: sensor_signal_81306933a9894264ae576d80dcd80c13
+	- produces: heatmap_7d82f965af1548ffa97132d8027997ba
+		- generation_method: GradCAM
+		- generated heatmap: [0.4, 0.3, 0.7, 0.7, 0.8, 0.9, 0.3, 0.2]
+	- checks: comp_bef9888042044709a4ee017a33f0b9dc
+	- reason for classification: diag_association_3592495
+	- prediction: true
+signal_classification_41e8affc090b4563bd07be19d5b0e7cd
+	- model id: 42qq#34
+	- uncertainty: 0.85e0
+	- classifies: sensor_signal_81306933a9894264ae576d80dcd80c13
+	- produces: heatmap_7d82f965af1548ffa97132d8027997ba
+		- generation_method: GradCAM
+		- generated heatmap: [0.4, 0.3, 0.7, 0.7, 0.8, 0.9, 0.3, 0.2]
+	- checks: comp_bef9888042044709a4ee017a33f0b9dc
+	- reason for classification: signal_classification_3543595
+	- prediction: true
+
+----------------------------------------------------------------------
+
+###########################################################################
+KNOWLEDGE SNAPSHOT - MANUAL INSPECTION PERSPECTIVE
+###########################################################################
+
+manual_inspection_3045949a733d4549ad5302496d26ef9e
+	- checks: comp_069c11d772584cecb9ffe8622f97ef44
+	- reason for inspection: signal_classification_45395859345
+	- prediction: false
+
+----------------------------------------------------------------------
+
+###########################################################################
+KNOWLEDGE SNAPSHOT - DIAGNOSIS LOG PERSPECTIVE
+###########################################################################
+
+diag_log_141c55b49556437d825e7b4480965bb6
+	- date: 01.02.2024
+	- appearing error codes:
+		- error_code_a7b0e515275746e88b12e9f99579ee9c
+		- error_code_8d07290c00544465a9346590df4248fd
+		- error_code_c2977316962b47919d59f22331bd6ae9
+		- error_code_ec7135c64a7f42a6b23b3eeb393a2d6d
+	- entails fault path: fault_path_175bea74ae06464a83fc46a0b3725f1e
+	- created for diag entity: diag_subject_39458359345382458
+	- diagnostic steps:
+		- signal_classification_9312e0cdeafa46c496c6d52d73b582a5
+		- signal_classification_41e8affc090b4563bd07be19d5b0e7cd
+		- manual_inspection_3045949a733d4549ad5302496d26ef9e
+
+----------------------------------------------------------------------
+
+###########################################################################
+KNOWLEDGE SNAPSHOT - FAULT PATH PERSPECTIVE
+###########################################################################
+
+fault path: fault_path_175bea74ae06464a83fc46a0b3725f1e
+	- path description:['C45 -> C1 -> C2']
+	- fault conditions that resulted in this fault path:
+		- FC0
+
+----------------------------------------------------------------------
+
+###########################################################################
+KNOWLEDGE SNAPSHOT - DIAG ENTITY PERSPECTIVE
+###########################################################################
+
+diag_entity_bc40acf2-f518-44de-a5e0-52af7f08b9df
+	- entity ID: 1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ
+	- error codes recorded in this diag entity:
+
+----------------------------------------------------------------------
+
