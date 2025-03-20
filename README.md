@@ -76,10 +76,9 @@ for k in suspect_components.keys():
     if len(suspect_components[k][1]) > 0:
         expert_knowledge_enhancer.add_component_to_knowledge_graph(k, suspect_components[k][1])
 
-for k in error_codes.keys():
-    code = k
-    fault_cond = error_codes[k][0]
-    associated_comps = error_codes[k][1]
+for code in error_codes.keys():
+    fault_cond = error_codes[code][0]
+    associated_comps = error_codes[code][1]
     expert_knowledge_enhancer.add_error_code_to_knowledge_graph(code, fault_cond, associated_comps)
 ```
 
