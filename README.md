@@ -10,10 +10,10 @@
 ## Three Levels of Abstraction
 
 - **raw ontology definition**: no instance data, just concepts with properties and relations (`knowledge_base/raw_nesy_diag_ontology.owl`)
-- **diag-subject-agnostic expert knowledge**
-- **diag-subject-specific diagnosis knowledge** automatically generated as part of the diagnostic process (recorded sensor data, interpretations, etc., cf. [nesy_diag_smach ](https://github.com/tbohne/nesy_diag_smach))
+- **diag-entity-agnostic expert knowledge**
+- **diag-entity-specific diagnosis knowledge** automatically generated as part of the diagnostic process (recorded sensor data, interpretations, etc., cf. [nesy_diag_smach ](https://github.com/tbohne/nesy_diag_smach))
 
-All three levels combined constitute the knowledge graph (`knowledge_base live_kg_backups/`).
+All three levels combined constitute the knowledge graph, e.g., `knowledge_base/129_10_10_50_10_95_99_42_98.nt`.
 
 ## Dependencies
 
@@ -34,14 +34,16 @@ $ pip install .
 $ ./fuseki-server
 ```
 
-**<u>Launch knowledge graph from RDF serialization (e.g. `.nt` / `.owl` / `.ttl` file):</u>**
+**<u>Prepare *Fuseki*:</u>**
 - navigate to `localhost:3030`
 - `manage` -> `new dataset`
     - Dataset name: `nesy_diag`
     - Dataset type: `Persistent (TDB2) – dataset will persist across Fuseki restarts`
 - `create dataset`
+
+**<u>Launch existing knowledge graph from RDF serialization (e.g., `.nq.gz` / `.nt` / `.owl` / `.ttl` file):</u>**
 - `add data` -> `select files`
-    - select knowledge graph file, e.g., `knowledge_base/test_kg.nt`
+    - select knowledge graph file, e.g., `knowledge_base/129_10_10_50_10_95_99_42_98.nt`
     - `upload now`
 
 Now the knowledge graph is hosted on the *Fuseki* server and can be queried, extended or updated via the SPARQL endpoints `/nesy_diag/sparql`, `/nesy_diag/data` and `/nesy_diag/update` respectively.
@@ -51,50 +53,110 @@ Now the knowledge graph is hosted on the *Fuseki* server and can be queried, ext
 
 Creates a backup in `fuseki_root/run/backups/`.
 
-The `.nq.gz` file should be extracted and the resulting `data` should be renamed to `data.nt` so that the n-triples file can be interpreted directly, e.g., when launching it on the server (see above). The backups are stored in `knowledge_base/live_kg_backups/`. For automated backups, see below.
+The `.nq.gz` file does not have to be extracted. The n-triples / n-quads file can be interpreted directly, e.g., when launching it on the server (see above). The backups are stored in `knowledge_base/live_kg_backups/`. For automated backups, see below.
 
-## Enhancement of Diag-Subject-Specific Diagnosis Knowledge
+## Expert Knowledge Acquisition
 
-The `OntologyInstanceGenerator` enhances the knowledge graph hosted by the *Fuseki* server with **diagnosis-specific instance data**, i.e., it connects the sensor readings, classifications, etc. generated during the diagnostic process, with corresponding background knowledge stored in the knowledge graph, e.g.:
+The `ExpertKnowledgeEnhancer` can be used to augment the knowledge graph hosted by the *Fuseki* server with **entity-agnostic expert knowledge**. In particular, it generates semantic facts based on the information entered and connects these facts in a meaningful way to what is already available in the knowledge graph, i.e., it serves as a backend for the knowledge acquisition component. Finally, all generated facts are concatenated and sent to the `ConnectionController`. Quite a number of semantic facts have to be generated when few information are entered. This way, a simple knowledge graph extension for the expert goes hand in hand with an automatic proper wiring of semantic facts in the background.
+
+Run server from *Apache Jena Fuseki* root directory (runs at `localhost:3030`):
+```
+$ ./fuseki-server
+```
+Launch raw ontology, i.e., `knowledge_base/raw_nesy_diag_ontology.owl`, then, e.g.:
+```python
+expert_knowledge_enhancer = ExpertKnowledgeEnhancer(kg_url='http://127.0.0.1:3030')
+
+for k in suspect_components.keys():
+    # init each component without any affected_by relations
+    expert_knowledge_enhancer.add_component_to_knowledge_graph(k, [])
+
+for k in suspect_components.keys():
+    # affected_by relations
+    if len(suspect_components[k][1]) > 0:
+        expert_knowledge_enhancer.add_component_to_knowledge_graph(k, suspect_components[k][1])
+
+for k in error_codes.keys():
+    code = k
+    fault_cond = error_codes[k][0]
+    associated_comps = error_codes[k][1]
+    expert_knowledge_enhancer.add_error_code_to_knowledge_graph(code, fault_cond, associated_comps)
+```
+
+## Enhancement of Diag-Entity-Specific Diagnosis Knowledge
+
+The `OntologyInstanceGenerator`, on the other hand, enhances the knowledge graph hosted by the *Fuseki* server with **diagnosis-specific instance data**, i.e., it connects sensor readings, classifications, etc. generated during the diagnostic process, with corresponding background knowledge stored in the knowledge graph, e.g.:
 ```python
 instance_gen = OntologyInstanceGenerator(kg_url='http://127.0.0.1:3030')
-instance_gen.extend_knowledge_graph_with_diag_subject_data("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+instance_gen.extend_knowledge_graph_with_diag_entity_data("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 classification_instances = [
     instance_gen.extend_knowledge_graph_with_signal_classification(
-        True, "diag_association_3592495", sus_comp, 0.45, "test_model_id", test_ts_id, test_heatmap_id
+        prediction=True,
+        classification_reason="diag_association_0",
+        comp="C_A",
+        uncertainty=0.45,
+        model_id="test_model_id",
+        signal_ids="signal_id",
+        heatmap_ids="heatmap_id"
     ),
     instance_gen.extend_knowledge_graph_with_signal_classification(
-        True, "signal_classification_3543595", sus_comp, 0.85, "test_model_id", test_ts_id, test_heatmap_id
+        prediction=True,
+        classification_reason="signal_classification_0",
+        comp="C_B",
+        uncertainty=0.85,
+        model_id="test_model_id",
+        signal_ids="signal_id",
+        heatmap_ids="heatmap_id"
     ),
     instance_gen.extend_knowledge_graph_with_manual_inspection(
-        False, "signal_classification_45395859345", manual_sus_comp
+        prediction=False, classification_reason="signal_classification_1", comp="C_C"
     )
 ]
 diag_log_uuid = instance_gen.extend_knowledge_graph_with_diag_log(
-    "01.02.2024", list_of_error_codes, [test_fault_path_id], classification_instances, "diag_subject_39458359345382458"
+    diag_date="19.03.2025",
+    error_code_instances=["E0"],
+    fault_path_instances=["fault_path_id"],
+    classification_instances=classification_instances,
+    entity_id="diag_entity_2342713"
 )
 ```
-This is used as part of [nesy_diag_smach](https://github.com/tbohne/nesy_diag_smach). All kinds of relevant diagnostic information are gathered and linked so that previously unknown correlations can be discovered by using the system.
+This is used as part of [nesy_diag_smach](https://github.com/tbohne/nesy_diag_smach). All kinds of relevant diagnostic information are gathered and linked so that previously unknown correlations can be discovered by deploying the system in practice.
 
 ## Knowledge Graph Query Tool
 
 The `KnowledgeGraphQueryTool` provides a library of numerous predefined SPARQL queries and response processing to access information stored in the knowledge graph that is used in the diagnostic process, e.g.:
 ```python
 qt = KnowledgeGraphQueryTool(kg_url='http://127.0.0.1:3030')
-qt.print_res(qt.query_all_error_code_instances())
-error_code = "E0001"
-qt.print_res(qt.query_fault_condition_by_error_code(error_code))
-qt.print_res(qt.query_suspect_components_by_error_code(error_code))
-qt.print_res(qt.query_diag_subject_by_error_code(error_code))
-qt.print_res(qt.query_fault_condition_instance_by_code(error_code))
-qt.print_res(qt.query_error_code_instance_by_code(error_code))
+qt.query_all_error_code_instances()
+error_code = "E0"
+qt.query_fault_condition_by_error_code(error_code)
+qt.query_suspect_components_by_error_code(error_code)
+qt.query_diag_entity_by_error_code(error_code)
 ...
-suspect_comp_name = "C0001"
-qt.print_res(qt.query_affected_by_relations_by_suspect_component(suspect_comp_name))
+suspect_comp_name = "C45"
+qt.query_affected_by_relations_by_suspect_component(suspect_comp_name)
 ...
-diag_subject_id = "ID2342713"
-qt.print_res(qt.query_diag_subject_instance_by_id(diag_subject_id))
-...
+```
+E.g.:
+```
+$ python nesy_diag_ontology/knowledge_graph_query_tool.py
+
+########################################################################
+QUERY: suspect components for E0
+########################################################################
+query knowledge graph..
+
+            SELECT ?comp_name WHERE {
+                ?error_code a <http://www.semanticweb.org/nesy_diag_ontology#ErrorCode> .
+                ?comp a <http://www.semanticweb.org/nesy_diag_ontology#SuspectComponent> .
+                ?comp <http://www.semanticweb.org/nesy_diag_ontology#component_name> ?comp_name .
+                ?da a <http://www.semanticweb.org/nesy_diag_ontology#DiagnosticAssociation> .
+                ?error_code <http://www.semanticweb.org/nesy_diag_ontology#code> "E0" .
+                ?da <http://www.semanticweb.org/nesy_diag_ontology#pointsTo> ?comp .
+                ?error_code <http://www.semanticweb.org/nesy_diag_ontology#hasAssociation> ?da .
+            }
+
+-->  C26, C45, C93, C15, C116, C18, C73, C97, C27
 ```
 This is also used as part of [nesy_diag_smach](https://github.com/tbohne/nesy_diag_smach), which essentially guides the diagnostic process based on knowledge graph queries (symbolic reasoning).
 
@@ -104,6 +166,9 @@ The idea of the knowledge snapshot is to output the knowledge currently stored i
 ```
 $ python nesy_diag_ontology/knowledge_snapshot.py [--perspective {expert | diag}]
 ```
+Exemplary excerpt:
+
+<img src="img/snapshot_excerpt.png" width="580">
 
 ## Automated Backup & Knowledge Graph Snapshot Generation
 
