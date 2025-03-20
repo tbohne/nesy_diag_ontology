@@ -87,7 +87,7 @@ for code in error_codes.keys():
 The `OntologyInstanceGenerator`, on the other hand, enhances the knowledge graph hosted by the *Fuseki* server with **diagnosis-specific instance data**, i.e., it connects sensor readings, classifications, etc. generated during the diagnostic process, with corresponding background knowledge stored in the knowledge graph, e.g.:
 ```python
 instance_gen = OntologyInstanceGenerator(kg_url='http://127.0.0.1:3030')
-instance_gen.extend_knowledge_graph_with_diag_entity_data("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+instance_gen.extend_knowledge_graph_with_diag_entity_data("2342713")
 classification_instances = [
     instance_gen.extend_knowledge_graph_with_signal_classification(
         prediction=True,
