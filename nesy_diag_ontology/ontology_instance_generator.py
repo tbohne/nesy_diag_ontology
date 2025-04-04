@@ -10,6 +10,7 @@ from rdflib import Namespace, RDF
 
 from nesy_diag_ontology.config import ONTOLOGY_PREFIX, FUSEKI_URL
 from nesy_diag_ontology.connection_controller import ConnectionController
+from nesy_diag_ontology.expert_knowledge_enhancer import ExpertKnowledgeEnhancer
 from nesy_diag_ontology.fact import Fact
 from nesy_diag_ontology.knowledge_graph_query_tool import KnowledgeGraphQueryTool
 
@@ -126,8 +127,10 @@ class OntologyInstanceGenerator:
         classification_uuid = "signal_classification_" + uuid.uuid4().hex
         model_res = self.knowledge_graph_query_tool.query_model_by_model_id(model_id)
         if len(model_res) == 0:
-            print("warning: model", model_id, "not part of kg")
-            return classification_uuid
+            print("warning: model", model_id, "not part of kg; creating it..")
+            expert_knowledge_enhancer = ExpertKnowledgeEnhancer()
+            expert_knowledge_enhancer.add_model_to_knowledge_graph(42, "z-norm", "measure x", model_id, comp, [], "CNN")
+            model_res = self.knowledge_graph_query_tool.query_model_by_model_id(model_id)
         model_uuid = model_res[0].split("#")[1]
 
         fact_list = [
