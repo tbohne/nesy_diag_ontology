@@ -123,9 +123,13 @@ class OntologyInstanceGenerator:
         assert "diag_association_" in classification_reason or "manual_inspection_" in classification_reason \
                or "signal_classification_" in classification_reason
         comp_uuid = self.knowledge_graph_query_tool.query_suspect_component_by_name(comp)[0].split("#")[1]
-        model_uuid = self.knowledge_graph_query_tool.query_model_by_model_id(model_id)[0].split("#")[1]
-
         classification_uuid = "signal_classification_" + uuid.uuid4().hex
+        model_res = self.knowledge_graph_query_tool.query_model_by_model_id(model_id)
+        if len(model_res) == 0:
+            print("warning: model", model_id, "not part of kg")
+            return classification_uuid
+        model_uuid = model_res[0].split("#")[1]
+
         fact_list = [
             Fact((classification_uuid, RDF.type, self.onto_namespace["SignalClassification"].toPython())),
             # properties
