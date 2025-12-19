@@ -183,6 +183,18 @@ This creates two files in `knowledge_base/live_kg_backups/`, one is the gzip com
 ## Related Publications
 
 ```bibtex
+@article{10.1109/ACCESS.2025.3641034,
+    author = {Bohne, Tim and Windler, Anne-Kathrin Patricia and Atzmueller, Martin},
+    journal = {IEEE Access},
+    title = {A Domain-Agnostic Neuro-Symbolic Architecture for Multimodal Human-in-the-Loop Anomaly Detection and Complex Fault Diagnosis},
+    year = {2025},
+    volume = {13},
+    number = {},
+    pages = {210201-210236},
+    doi={10.1109/ACCESS.2025.3641034}
+}
+```
+```bibtex
 @inproceedings{10.1145/3587259.3627546,
     author = {Bohne, Tim and Windler, Anne-Kathrin Patricia and Atzmueller, Martin},
     title = {A Neuro-Symbolic Approach for Anomaly Detection and Complex Fault Diagnosis Exemplified in the Automotive Domain},
