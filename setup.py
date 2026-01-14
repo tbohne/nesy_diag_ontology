@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 URL = 'https://github.com/tbohne/nesy_diag_ontology'
 
 with open('requirements.txt') as f:
@@ -29,7 +29,7 @@ setup(
         'knowledge-graph',
         'knowledge-base'
     ],
-    python_requires='>=3.7, <3.11',
+    python_requires='>=3.7',
     install_requires=required,
     packages=find_packages(),
     include_package_data=True,
