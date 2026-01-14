@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 URL = 'https://github.com/tbohne/nesy_diag_ontology'
 
 with open('requirements.txt') as f:
